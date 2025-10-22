@@ -1,0 +1,326 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import { UpdateBrand } from "../../../lib/APIs/brandsAPI";
+import { getBrandById } from "../../../lib/APIs/brandsAPI"; // You should have this API or similar
+import { GenericOptions } from "../../../lib/APIs/genericAPI";
+import { PharmaceuticalOptions } from "../../../lib/APIs/pharmaceuticalAPI";
+import { toast } from "react-toastify";
+
+const AdminUpdateBrand = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    productType: "",
+    name: "",
+    generic: "",
+    manufacturer: "",
+    dosageForm: "",
+    strength: "",
+    packSize: "",
+    unitPrice: "",
+    totalPrice: "",
+    packImage: null,
+  });
+
+  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [fetchingOptions, setFetchingOptions] = useState(false);
+
+  
+    const [genericOptions, setGenericOptions] = useState([]);
+    const [manufacturerOptions, setManufacturerOptions] = useState([]);
+  
+    // dropdown options ka data fetch
+    const fetchDropdownData = async () => {
+      try {
+        setFetchingOptions(true);
+  
+        const [genericRes, manufacturerRes] = await Promise.all([
+          GenericOptions(),
+          PharmaceuticalOptions(),
+        ]);
+  
+        setGenericOptions(Array.isArray(genericRes.data) ? genericRes.data : []);
+        setManufacturerOptions(
+          Array.isArray(manufacturerRes.data) ? manufacturerRes.data : []
+        );
+      } catch (err) {
+        console.error("Error fetching dropdown data:", err);
+        toast.error(err.response?.data?.message || "Failed to fetch dropdowns");
+      } finally {
+        setFetchingOptions(false);
+      }
+    };
+  
+    useEffect(() => {
+      fetchDropdownData();
+    }, []);
+  
+
+  // Fetch existing brand data
+const fetchBrand = async () => {
+  try {
+    setLoading(true);
+    const response = await getBrandById(id);
+
+    // Check structure of response (most APIs return { data: {...} })
+    const brand = response.data || response; 
+
+    setFormData({
+      productType: brand.productType || "",
+      name: brand.name || "",
+      generic: "",
+      manufacturer: "",
+      dosageForm: brand.dosageForm || "",
+      strength: brand.strength || "",
+      packSize: brand.packSize || "",
+      unitPrice: brand.unitPrice || "",
+      totalPrice: brand.totalPrice || "",
+      packImage: null,
+    });
+
+    setPreview(brand.packImage);
+  } catch (err) {
+    console.error("Error fetching brand:", err);
+    toast.error(err.response?.data?.message || "Failed to fetch brand data.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+  useEffect(() => {
+    fetchBrand();
+  }, [id]);
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+    if (type === "file") {
+      const file = files[0];
+      setFormData((prev) => ({ ...prev, packImage: file }));
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setErrorMessage("");
+      setSuccessMessage("");
+
+      const response = await UpdateBrand(id, formData);
+      setSuccessMessage(response.message || "Brand updated successfully!");
+      toast.success(response.message || "Brand updated successfully!");
+      setTimeout(() => navigate("/admin/brands"), 600);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update brand.");
+      setErrorMessage(error.response?.data?.message || "Failed to update brand.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    // options k liye loading and empty checks
+  const renderOptions = (data, label) => {
+    if (fetchingOptions) return <option>Loading {label}...</option>;
+    if (!data.length) return <option>No {label} available</option>;
+
+    return data.map((item) => (
+      <option key={item._id} value={item._id}>
+        {item.name}
+      </option>
+    ));
+  };
+
+  return (
+    <div className="w-full min-h-screen flex justify-center bg-gray-100">
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8 my-10 border border-gray-200">
+        <h1 className="text-3xl font-semibold text-black mb-8 border-b-2 border-tertiary pb-2">
+          Update Brand
+        </h1> 
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {/* Basic Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-black font-medium mb-2">Product Type</label>
+              <input
+                type="text"
+                name="productType"
+                value={formData.productType}
+                onChange={handleChange}
+                placeholder="Enter product type"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-black font-medium mb-2">Brand Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter brand name"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Generic and Manufacturer */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-black font-medium mb-2">Generic ID</label>
+              <select
+                name="generic"
+                value={formData.generic}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              >
+                <option value="">Select Generic</option>
+                {renderOptions(genericOptions, "Generics")}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-black font-medium mb-2">Manufacturer ID</label>
+              <select
+                name="manufacturer"
+                value={formData.manufacturer}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              >
+                <option value="">Select Manufacturer</option>
+                {renderOptions(manufacturerOptions, "Manufacturers")}
+              </select>
+            </div>
+          </div>
+
+          {/* Optional Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-black font-medium mb-2">Dosage Form</label>
+              <input
+                type="text"
+                name="dosageForm"
+                value={formData.dosageForm}
+                onChange={handleChange}
+                placeholder="e.g. Tablet"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              />
+            </div>
+
+            <div>
+              <label className="block text-black font-medium mb-2">Strength</label>
+              <input
+                type="text"
+                name="strength"
+                value={formData.strength}
+                onChange={handleChange}
+                placeholder="e.g. 500mg"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              />
+            </div>
+
+            <div>
+              <label className="block text-black font-medium mb-2">Pack Size</label>
+              <input
+                type="text"
+                name="packSize"
+                value={formData.packSize}
+                onChange={handleChange}
+                placeholder="e.g. 10 tablets"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              />
+            </div>
+          </div>
+
+          {/* Prices */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-black font-medium mb-2">Unit Price</label>
+              <input
+                type="number"
+                name="unitPrice"
+                value={formData.unitPrice}
+                onChange={handleChange}
+                placeholder="Enter unit price"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              />
+            </div>
+
+            <div>
+              <label className="block text-black font-medium mb-2">Total Price</label>
+              <input
+                type="number"
+                name="totalPrice"
+                value={formData.totalPrice}
+                onChange={handleChange}
+                placeholder="Enter total price"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              />
+            </div>
+          </div>
+
+          {/* Image Upload */}
+          <div>
+            <label className="block text-black font-medium mb-2">Pack Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              name="packImage"
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+            />
+            {preview && (
+              <div className="mt-4">
+                <img
+                  src={preview}
+                  alt="Preview"
+                  className="w-full max-h-64 object-cover rounded-lg border border-gray-300"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Messages */}
+          {errorMessage && (
+            <div className="bg-red-100 text-red-600 border-red-600 p-3 rounded-sm text-sm">
+              {errorMessage}
+            </div>
+          )}
+          {successMessage && (
+            <div className="bg-green-100 text-green-600 border-green-600 p-3 rounded-sm text-sm">
+              {successMessage}
+            </div>
+          )}
+
+          {/* Submit */}
+          <div className="flex justify-end mt-8">
+            <button
+              type="submit"
+              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
+              disabled={loading}
+            >
+              {loading ? "Updating..." : "Update Brand"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default AdminUpdateBrand;

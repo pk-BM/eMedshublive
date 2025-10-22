@@ -1,0 +1,57 @@
+.test-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.test-card {
+  width: 60%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.test-name {
+  text-align: center;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+.test-image img {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+.test-description {
+  margin: 1.5rem 0;
+  color: #555;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.trusted-centers {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.center-logos {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.center-logos img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 5px;
+  border: 1px solid #ddd;
+}

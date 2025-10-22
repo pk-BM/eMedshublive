@@ -1,0 +1,36 @@
+.ad-container {
+  position: fixed;
+  top: 80px; /* Adjust to match your Navbar height (usually ~80px) */
+  left: 0;
+  width: 15%;
+  height: calc(100vh - 160px); /* full height minus navbar & footer */
+  background-color: #f9f9f9;
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 5; /* below navbar/footer but above content */
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border-right: 1px solid #e0e0e0;
+}
+
+.ad-card {
+  width: 100%;
+  text-align: center;
+}
+
+.ad-image img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+  font-weight: bold;
+}

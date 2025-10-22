@@ -1,0 +1,169 @@
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { GetGenericById } from "../../lib/APIs/genericAPI";
+import { MdOutlineMedicalServices } from "react-icons/md";
+import { FaFilePdf } from "react-icons/fa";
+
+const GenericDetails = () => {
+  const { id } = useParams();
+  const [formData, setFormData] = useState({
+    name: "",
+    file: null,
+    image: null,
+    indication: "",
+    composition: "",
+    pharmacology: "",
+    dosageAndAdministration: "",
+    interaction: "",
+    contraindication: "",
+    sideEffect: "",
+    pregnancyAndLactation: "",
+    overdoseEffect: "",
+    therapeuticClass: "",
+    storageCondition: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  const fetchGenericDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await GetGenericById(id);
+      setFormData(response?.data || {});
+    } catch (error) {
+      console.error(error);
+      toast.error("Error fetching generic details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGenericDetails();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-gray-600 text-sm">
+        Loading generic details...
+      </div>
+    );
+  }
+
+  const sections = [
+    { title: "Indications", key: "indication" },
+    { title: "Composition", key: "composition" },
+    { title: "Pharmacology", key: "pharmacology" },
+    { title: "Dosage & Administration", key: "dosageAndAdministration" },
+    { title: "Interaction", key: "interaction" },
+    { title: "Contraindication", key: "contraindication" },
+    { title: "Side Effects", key: "sideEffect" },
+    { title: "Pregnancy & Lactation", key: "pregnancyAndLactation" },
+    { title: "Overdose Effect", key: "overdoseEffect" },
+    { title: "Therapeutic Class", key: "therapeuticClass" },
+    { title: "Storage Condition", key: "storageCondition" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 px-5 py-10 font-inter">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-10 border-b-2 border-green-200 pb-4">
+        <div className="flex items-center gap-3">
+          <MdOutlineMedicalServices className="text-[#34d399] text-4xl" />
+          <h2 className="text-3xl font-semibold text-slate-800">
+            {formData.name || "Generic Details"}
+          </h2>
+        </div>
+
+        <button className="bg-[#34d399] hover:bg-[#2fb386] text-white text-sm px-5 py-2.5 rounded-md shadow-md transition flex items-center gap-2">
+          <FaFilePdf className="text-white text-lg" />
+          Product
+        </button>
+      </div>
+
+      {/* Image + PDF */}
+      {(formData.image || formData.file) && (
+        <div className="flex flex-col sm:flex-row gap-6 mb-10">
+          {formData.image && (
+            <img
+              src={formData.image}
+              alt={formData.name}
+              className="w-full sm:w-1/3 rounded-xl shadow-md border border-gray-200"
+            />
+          )}
+          {formData.file && (
+            <a
+              href={formData.file}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#ec4899] hover:bg-[#db2777] text-white text-sm px-6 py-3 rounded-md shadow-md transition self-start"
+            >
+              <FaFilePdf className="text-white text-lg" />
+              View PDF
+            </a>
+          )}
+        </div>
+      )}
+
+      {/* Section Rendering */}
+      {sections.map(
+        (section, idx) =>
+          formData[section.key] && (
+            <div key={idx} className="mb-8">
+              {/* Section Header */}
+              <div className="bg-[#34d399] text-white px-4 py-2 rounded-t-md shadow-sm">
+                <h3 className="text-lg font-semibold tracking-wide">
+                  {section.title}
+                </h3>
+              </div>
+
+              {/* Section Content */}
+              <div
+                className="bg-white border border-green-100 p-5 rounded-b-md shadow-sm text-gray-700 leading-relaxed prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: formData[section.key],
+                }}
+              ></div>
+            </div>
+          )
+      )}
+        {/* Image + PDF Section */}
+{(formData.image || formData.file) && (
+  <div className="flex flex-col sm:flex-row gap-6 mb-10">
+    {/* Image */}
+    {formData.image && (
+      <motion.img
+        src={
+          formData.image && formData.image.trim() !== ""
+            ? formData.image
+            : "/no-image.png"
+        }
+        alt={formData.name || "Generic Image"}
+        className="w-full sm:w-1/3 object-contain rounded-xl border border-gray-200 shadow-md"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+    )}
+
+            {/* PDF */}
+            {formData.file && (
+            <a
+                href={formData.file}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white text-sm px-6 py-3 rounded-md shadow-md transition self-start"
+            >
+                <FaFilePdf className="text-white text-lg" />
+                View PDF
+            </a>
+            )}
+        </div>
+        )}
+
+
+    </div>
+  );
+};
+
+export default GenericDetails;
