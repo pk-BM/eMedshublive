@@ -19,27 +19,27 @@ const upload = multer({ storage });
 
 router.get(
   "/options",
-  isAuthenticated,
-  isAuthorized("Admin"),
   pharmaceuticalOptions
 );
 
 // CREATE
 router.post(
   "/create",
+  isAuthenticated,
+  isAuthorized("Admin"),
   upload.fields([{ name: "logo", maxCount: 1 }]),
   createPharmaceutical
 );
 
 router.get(
   "/getAll",
+
   getPharmaceuticals
 );
 
 router.get(
   "/:id",
-  isAuthenticated,
-  isAuthorized("Admin"),
+
   getPharmaceuticalById
 );
 

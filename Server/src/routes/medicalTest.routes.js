@@ -26,10 +26,12 @@ router.post(
 );
 router.get(
   "/getAll",
+
   getAllMedicalTest
 );
 router.get(
   "/get/:id",
+
   getMedicalTestById
 );
 router.put(

@@ -1,46 +1,28 @@
 import React from "react";
-import "./TestCard.css";
 
-const   TestCard = ({ name, image, description, trustedCenters = [] }) => {
+const TestCard = ({ image, description }) => {
   return (
-    <div className="test-container">
-      <div className="test-card">
-        {/* Test Name */}
-        <h2 className="test-name">{name || "Unnamed Medical Test"}</h2>
+    <div className="w-[80%] mx-auto bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 overflow-hidden">
+      
+      {/* Image on top */}
+      <div className="w-full h-64 md:h-80">
+        <img
+          src={image || "https://via.placeholder.com/300?text=Test+Image"}
+          alt="Medical Test"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-        {/* Test Image */}
-        <div className="test-image">
-          <img
-            src={image || "https://via.placeholder.com/300?text=Test+Image"}
-            alt={name || "Medical Test"}
-          />
-        </div>
-
-        {/* Description */}
-        <div className="test-description">
-          <p>
-            {description ||
-              "No detailed information available for this medical test."}
-          </p>
-        </div>
-
-        {/* Trusted Diagnostic Centers */}
-        <div className="trusted-centers">
-          <h3>Trusted Diagnostic Centers</h3>
-          <div className="center-logos">
-            {trustedCenters.length > 0 ? (
-              trustedCenters.map((center, index) => (
-                <img
-                  key={index}
-                  src={center}
-                  alt={`Diagnostic Center ${index + 1}`}
-                />
-              ))
-            ) : (
-              <p>No centers available.</p>
-            )}
-          </div>
-        </div>
+      {/* Text below image */}
+      <div className="p-6 bg-[#f9fafb] text-right">
+        <div
+          className="text-base text-[#6b7280] leading-relaxed"
+          dangerouslySetInnerHTML={{
+            __html:
+              description ||
+              "<p>No detailed information available for this medical test.</p>",
+          }}
+        ></div>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ router.get(
 );
 
 // GET BY ID
-router.get("/:id", getDoctorAdviceById);
+router.get("/:id", isAuthenticated, getDoctorAdviceById);
 
 // UPDATE
 router.put(

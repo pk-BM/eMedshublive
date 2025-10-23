@@ -20,7 +20,7 @@ const storage = multer.memoryStorage();
 
 const upload = multer({ storage });
 
-router.get("/options", isAuthenticated, isAuthorized("Admin"), genericOptions);
+router.get("/options", genericOptions);
 
 router.post(
   "/create",
@@ -32,8 +32,8 @@ router.post(
   ]),
   createGeneric
 );
-router.get("/getAll", getGenerics);
-router.get("/:id", getGenericById);
+router.get("/getAll",  getGenerics);
+router.get("/:id",  getGenericById);
 router.put(
   "/update/:id",
   isAuthenticated,

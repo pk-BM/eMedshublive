@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import BrandCard from "../../components/Drugs/BrandCard";
 import { GetAllBrands } from "../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
+import { MdOutlineMedicalServices } from "react-icons/md";
+import { IoSearch } from "react-icons/io5";
 
 const DrugClasses = () => {
   const [selectedClass, setSelectedClass] = useState("All Products");
@@ -14,6 +16,11 @@ const DrugClasses = () => {
     "All Products",
     "New Products",
     "Bioequivalent Products",
+    // "Category A",
+    // "Category B",
+    // "Category C",
+    // "Category D",
+    // "Category E",
   ];
 
   useEffect(() => {
@@ -41,7 +48,7 @@ const DrugClasses = () => {
 
     if (selectedClass === "Bioequivalent Products") {
       filtered = brands.filter((item) =>
-        item.productType?.toLowerCase().includes("bio equivalent" || "bioequivalent")
+        item.productType?.toLowerCase().includes("bio equivalent")
       );
     } else if (selectedClass === "New Products") {
       filtered = [...brands]
@@ -49,7 +56,6 @@ const DrugClasses = () => {
         .slice(0, 10);
     }
 
-    // ✅ Search filter
     if (searchTerm.trim()) {
       filtered = filtered.filter(
         (brand) =>
@@ -64,47 +70,57 @@ const DrugClasses = () => {
   const filteredData = getFilteredBrands();
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
-      {/* Category Buttons and Search Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
-        <div className="flex flex-wrap gap-3">
-          {drugCategories.map((drugClass) => (
-            <button
-              key={drugClass}
-              onClick={() => setSelectedClass(drugClass)}
-              className={`px-4 py-2 border rounded-md text-sm font-medium transition-all ${
-                selectedClass === drugClass
-                  ? "bg-teal-600 text-white"
-                  : "border-teal-600 text-teal-700 hover:bg-teal-50"
-              }`}
-            >
-              {drugClass}
-            </button>
-          ))}
-        </div>
+    <div className="min-h-screen bg-gray-50 px-5 py-10 font-inter">
+      {/* HEADER SECTION */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b-2 border-[#34d399] pb-5 mb-10">
+        <h2 className="text-2xl font-semibold text-slate-800 flex items-center gap-2">
+          <MdOutlineMedicalServices className="text-[#34d399] text-3xl" />
+          <span className="tracking-wide">Brands</span>
+        </h2>
 
-        {/* ✅ Search bar */}
-        <input
-          type="text"
-          placeholder="Search brand or generic..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-teal-500"
-        />
+        {/* Search Bar */}
+        <div className="relative w-full md:w-72">
+          <IoSearch className="absolute top-2.5 left-3 text-[#34d399] text-lg" />
+          <input
+            type="text"
+            placeholder="Search brands..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full border border-[#34d399]/40 rounded-lg pl-9 pr-3 py-2 text-sm text-gray-700 
+                       focus:ring-2 focus:ring-[#34d399] focus:outline-none transition-all bg-white"
+          />
+        </div>
       </div>
 
-      {/* Section Title */}
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-teal-600 pl-3">
-        {selectedClass}
-      </h2>
+      {/* CATEGORY BUTTONS */}
+      <div className="flex flex-wrap items-center justify-start gap-3 mb-8">
+        {drugCategories.map((drugClass) => (
+          <button
+            key={drugClass}
+            onClick={() => setSelectedClass(drugClass)}
+            className={`px-4 py-2 border rounded-md text-sm font-medium transition-all ${
+              selectedClass === drugClass
+                ? "bg-[#34d399] text-white border-[#34d399]"
+                : "border-[#34d399] text-[#34d399] hover:bg-[#34d399]/10"
+            }`}
+          >
+            {drugClass}
+          </button>
+        ))}
+      </div>
 
-      {/* Loading / Empty / Data */}
+      {/* SECTION TITLE */}
+      <h3 className="text-xl font-bold text-[#1f2937] mb-6 border-l-4 border-[#34d399] pl-3">
+        {selectedClass}
+      </h3>
+
+      {/* MAIN CONTENT */}
       {loading ? (
-        <p className="text-gray-500">Loading brands...</p>
+        <p className="text-[#6b7280] text-center">Loading brands...</p>
       ) : filteredData.length === 0 ? (
-        <p className="text-gray-500">No products found.</p>
+        <p className="text-[#6b7280] text-center">No products found.</p>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredData.map((brand, index) => (
             <Link
               key={index}

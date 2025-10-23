@@ -28,10 +28,12 @@ router.post(
 );
 router.get(
   "/getAll",
+
   getAllTrustedCenter
 );
 router.get(
   "/getById/:id",
+
   getTrustedCenterById
 );
 router.put(
@@ -49,8 +51,7 @@ router.delete(
 );
 router.get(
   "/options",
-  isAuthenticated,
-  isAuthorized("Admin"),
+
   TrustedCenterOptions
 );
 

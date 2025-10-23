@@ -29,7 +29,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center w-full px-6 md:px-28 h-20 relative">
+    <div className="flex justify-between items-center w-full l h-20 relative">
       {/* Logo */}
       <Link to="/" className="text-2xl md:text-3xl font-bold">
         eMedsHub
@@ -76,20 +76,32 @@ const Navbar = () => {
               </div>
 
               <ul className="space-y-4">
-                <li className="font-medium">GENERICS</li>
-                <ul className="pl-3 space-y-2">
-                  {/* {dropdownItems.MEDICINE.map((item, idx) => (
-                    <li
-                      key={idx}
-                      className="text-sm text-gray-600 cursor-pointer"
-                    >
-                      {item.title}
-                    </li>
-                  ))} */}
-                </ul>
 
-                <li className="font-medium">PHARMACEUTICALS</li>
-                <li className="font-medium">BRANDS</li>
+                  <Link  
+                  to="/generics"
+                  className="block w-full"
+                  onClick={() => setMobileSiteActive(false)}
+                  >
+                <li className="font-medium">GENERICS</li>
+                  </Link>
+
+                <ul className="pl-3 space-y-2">
+                </ul>
+                  <Link  
+                  to="/pharmaceuticals"
+                  className="block w-full"
+                  onClick={() => setMobileSiteActive(false)}
+                  >
+                  <li className="font-medium">PHARMACEUTICALS</li>
+                  </Link>
+
+                  <Link     
+                  to="/brands"
+                  className="block w-full"
+                  onClick={() => setMobileSiteActive(false)}
+                  >
+                  <li className="font-medium">BRANDS</li>
+                  </Link>
 
                 <li className="font-medium">MORE</li>
                 <ul className="pl-3 space-y-2">
@@ -98,7 +110,13 @@ const Navbar = () => {
                       key={idx}
                       className="text-sm text-gray-600 cursor-pointer"
                     >
-                      {item.title}
+                            <Link
+                        to={item.link}
+                        className="block w-full"
+                        onClick={() => setMobileSiteActive(false)}
+                      >
+                        {item.title}
+                      </Link>
                     </li>
                   ))}
                 </ul>

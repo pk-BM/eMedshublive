@@ -1,4 +1,3 @@
-// export default Pharmaceuticals;
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BrandCard from "../../components/Drugs/BrandCard";
@@ -12,27 +11,28 @@ const Pharmaceuticals = () => {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // ✅ Fetch pharmaceuticals data
-  useEffect(() => {
-    const fetchBrands = async () => {
-      try {
-        const response = await GetAllPharmaceutical();
-        if (response?.success && Array.isArray(response.data)) {
-          setBrands(response.data);
-        } else {
-          toast.error("Invalid data received from server");
-        }
-      } catch (error) {
-        toast.error("Error fetching Pharmaceuticals");
-        console.error("Error fetching Pharmaceutical:", error);
-      } finally {
-        setLoading(false);
+  // ✅ Fetch Pharmaceuticals
+  const fetchBrands = async () => {
+    try {
+      setLoading(true);
+      const response = await GetAllPharmaceutical();
+      if (response?.success && Array.isArray(response.data)) {
+        setBrands(response.data);
+      } else {
+        toast.error("Invalid data received from server");
       }
-    };
+    } catch (error) {
+      console.error("Error fetching pharmaceuticals:", error);
+      toast.error("Error fetching pharmaceuticals");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBrands();
   }, []);
 
@@ -83,20 +83,31 @@ const Pharmaceuticals = () => {
           No Pharmaceuticals found.
         </p>
       ) : (
-        <div className="grid col-span-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {currentItems.map((pharmaceutical, index) => (
-            <Link
-              key={index}
-              to={`/pharmaceuticals/${pharmaceutical._id}`}
-              className="cursor-pointer hover:scale-[1.02] transition-transform"
-            >
-              <BrandCard
-                packImage={pharmaceutical.logo}
-                name={pharmaceutical.name || "Unnamed"}
-                generic={`${pharmaceutical.totalGenerics || 0} Generics`}
-              />
-            </Link>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {currentItems.map((pharmaceutical, index) => {
+            // ✅ Handle generics count safely
+            const genericsCount =
+              pharmaceutical.genericsCount ??
+              (Array.isArray(pharmaceutical.generics)
+                ? pharmaceutical.generics.length
+                : pharmaceutical.generic
+                ? 1
+                : 0);
+
+            return (
+              <Link
+                key={index}
+                to={`/pharmaceuticals/${pharmaceutical._id}`}
+                className="cursor-pointer hover:scale-[1.02] transition-transform"
+              >
+                <BrandCard
+                  packImage={pharmaceutical.logo}
+                  name={pharmaceutical.name || "Unnamed"}
+                  generic={pharmaceutical.totalGenerics || "0"}
+                />
+              </Link>
+            );
+          })}
         </div>
       )}
 

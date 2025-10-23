@@ -26,7 +26,7 @@ router.post(
 
 router.get("/getAll",  getBrands);
 
-router.get("/:id", getBrandById);
+router.get("/:id",  getBrandById);
 
 router.put(
   "/update/:id",

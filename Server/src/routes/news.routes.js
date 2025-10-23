@@ -24,7 +24,7 @@ router.post(
   createNews
 );
 
-router.get("/getAll", getAllNews);
+router.get("/getAll",  getAllNews);
 
 router.get("/:id", getNewsById);
 

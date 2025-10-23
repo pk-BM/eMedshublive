@@ -28,12 +28,14 @@ router.post(
 // GET ALL
 router.get(
   "/getAll",
+
   getAllAdvertisements
 );
 
 // GET BY ID
 router.get(
   "/:id",
+
   getAdvertisementById
 );
 
