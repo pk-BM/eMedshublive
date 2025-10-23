@@ -5,8 +5,8 @@ const router = express.Router()
 
 
 router.post("/create", isAuthenticated, isAuthorized("Admin"), createLeader)
-router.get("/getAll",  getAllLeaders)
-router.get("/get/:id", sgetLeaderById)
+router.get("/getAll", getAllLeaders)
+router.get("/get/:id", getLeaderById)
 router.put("/update/:id", isAuthenticated, isAuthorized("Admin"), updateLeader)
 router.delete("/delete/:id", isAuthenticated, isAuthorized("Admin"), deleteLeader)
 
