@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
-import fs, { rmSync } from "fs";
 import { sendResponse } from "../utils/sendResponse.js";
 import { uploadImageToCloudinary } from "../utils/uploadDataToCloudinary.js";
-import Pharmaceutical from "../models/Pharmaceutical.model.js";
 import { deleteFromCloudinary } from "../utils/deleteDataFromCloudinary.js";
+import Pharmaceutical from "../models/pharmaceutical.model.js"
+
 
 export const createPharmaceutical = async (req, res) => {
   try {
     const { name } = req.body;
 
-  
+
     if (!name || name.trim() === "") {
       return sendResponse(
         res,
@@ -25,7 +25,7 @@ export const createPharmaceutical = async (req, res) => {
       createdBy: req.user?._id,
     };
 
- 
+
     const logo = req?.files?.logo?.[0];
     if (logo) {
       const imageUrl = await uploadImageToCloudinary(logo.buffer);
