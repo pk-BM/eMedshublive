@@ -102,15 +102,6 @@ const BrandDetail = () => {
       value: `Rs. ${brand.totalPrice}`,
       icon: <FaMoneyBillWave className="text-teal-600 text-2xl" />,
     },
-    {
-      label: "Status",
-      value: brand.isActive ? "Active" : "Inactive",
-      icon: brand.isActive ? (
-        <FaCheckCircle className="text-green-600 text-2xl" />
-      ) : (
-        <FaTimesCircle className="text-red-600 text-2xl" />
-      ),
-    },
   ];
 
   return (
@@ -129,7 +120,7 @@ const BrandDetail = () => {
               : "/no-image.png"
           }
           alt={brand.name}
-          className="w-64 h-64 object-contain rounded-2xl border border-gray-200 shadow-sm"
+          className="object-contain rounded-2xl border border-gray-200 shadow-sm"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2 }}
