@@ -29,7 +29,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="flex justify-between items-center w-full l h-20 relative">
+    <div className="flex justify-between items-center w-full h-20 px-6 md:px-28 relative">
       {/* Logo */}
       <Link to="/" className="text-2xl md:text-3xl font-bold">
         eMedsHub
@@ -76,32 +76,30 @@ const Navbar = () => {
               </div>
 
               <ul className="space-y-4">
-
-                  <Link  
+                <Link
                   to="/generics"
                   className="block w-full"
                   onClick={() => setMobileSiteActive(false)}
-                  >
-                <li className="font-medium">GENERICS</li>
-                  </Link>
+                >
+                  <li className="font-medium">GENERICS</li>
+                </Link>
 
-                <ul className="pl-3 space-y-2">
-                </ul>
-                  <Link  
+                <ul className="pl-3 space-y-2"></ul>
+                <Link
                   to="/pharmaceuticals"
                   className="block w-full"
                   onClick={() => setMobileSiteActive(false)}
-                  >
+                >
                   <li className="font-medium">PHARMACEUTICALS</li>
-                  </Link>
+                </Link>
 
-                  <Link     
+                <Link
                   to="/brands"
                   className="block w-full"
                   onClick={() => setMobileSiteActive(false)}
-                  >
+                >
                   <li className="font-medium">BRANDS</li>
-                  </Link>
+                </Link>
 
                 <li className="font-medium">MORE</li>
                 <ul className="pl-3 space-y-2">
@@ -110,7 +108,7 @@ const Navbar = () => {
                       key={idx}
                       className="text-sm text-gray-600 cursor-pointer"
                     >
-                            <Link
+                      <Link
                         to={item.link}
                         className="block w-full"
                         onClick={() => setMobileSiteActive(false)}
@@ -139,15 +137,15 @@ const Navbar = () => {
           {/* <p className="font-medium text-sm hover:text-secondary hover:underline transition-all duration-300 p-3 flex items-center gap-1">
             <span>GENERICS</span>
             {/* <IoIosArrowDown size={16} /> */}
-          {/* </p> */} 
+          {/* </p> */}
 
           <Link
-          to="/generics"
-          className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+            to="/generics"
+            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
           >
             GENERICS
           </Link>
-{/* 
+          {/* 
           <AnimatePresence>
             {openDropdown === "MEDICINE" && (
               <motion.ul
@@ -176,7 +174,6 @@ const Navbar = () => {
         <Link
           to="/pharmaceuticals"
           className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
-          
         >
           PHARMACEUTICALS
         </Link>

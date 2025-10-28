@@ -10,6 +10,10 @@ const genericSchema = new mongoose.Schema(
     innovatorMonograph: {
       type: String, // PDF file URL
     },
+    allophaticOrHerbal: {
+      type: String,
+      enum: ["Allophatic", "Herbal"],
+    },
     structureImage: {
       type: String, // image URL
     },
