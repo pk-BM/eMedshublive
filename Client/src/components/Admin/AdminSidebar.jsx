@@ -15,7 +15,7 @@ import {
   MdLogout,
 } from "react-icons/md";
 import { GiMedicines } from "react-icons/gi";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Logout } from "../../lib/APIs/authAPI";
 
@@ -24,29 +24,20 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
   const { setAuthUser, authUser } = useAuth();
 
-  // mobile open state
   const [isOpen, setIsOpen] = useState(false);
-  // desktop detection (avoids reading window in render / SSR mismatches)
-  const [isDesktop, setIsDesktop] = useState(() =>
-    typeof window !== "undefined" ? window.innerWidth >= 768 : true
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== "undefined" ? window.innerWidth >= 1024 : true
   );
 
   useEffect(() => {
-    const onResize = () => setIsDesktop(window.innerWidth >= 768);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // lock body scroll when sidebar (mobile) is open
   useEffect(() => {
-    if (isOpen && !isDesktop) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = isOpen && !isDesktop ? "hidden" : "";
+    return () => (document.body.style.overflow = "");
   }, [isOpen, isDesktop]);
 
   const handleLogout = async () => {
@@ -55,8 +46,8 @@ const AdminSidebar = () => {
       setAuthUser(null);
       navigate("/");
     } catch (error) {
-      setAuthUser(null);
       console.log(error);
+      setAuthUser(null);
     }
   };
 
@@ -72,36 +63,38 @@ const AdminSidebar = () => {
     { label: "Trusted Center", path: "/admin/trusted-center", icon: <MdLocalPharmacy size={22} /> },
   ];
 
-  // Sidebar container animation + stagger for items
   const sidebarVariants = {
     hidden: { x: "-100%", opacity: 0 },
     visible: {
       x: 0,
       opacity: 1,
-      transition: { type: "spring", damping: 18, stiffness: 100, when: "beforeChildren", staggerChildren: 0.04 },
+      transition: {
+        type: "spring",
+        damping: 18,
+        stiffness: 100,
+        when: "beforeChildren",
+        staggerChildren: 0.05,
+      },
     },
     exit: { x: "-100%", opacity: 0, transition: { when: "afterChildren" } },
   };
 
   const itemVariants = {
     hidden: { x: -8, opacity: 0 },
-    visible: { x: 0, opacity: 1, transition: { duration: 0.18 } },
+    visible: { x: 0, opacity: 1, transition: { duration: 0.2 } },
   };
 
   return (
     <>
       {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b shadow-sm w-full z-50">
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white border-b shadow-sm fixed top-0 left-0 right-0 z-50">
         <h1 className="text-2xl font-bold text-green-600">eMedsHub</h1>
         <button
           aria-label={isOpen ? "Close menu" : "Open menu"}
           onClick={() => setIsOpen((s) => !s)}
+          className="text-green-600"
         >
-          {isOpen ? (
-            <MdClose size={28} className="text-green-600" />
-          ) : (
-            <IoMenu size={28} className="text-green-600" />
-          )}
+          {isOpen ? <MdClose size={28} /> : <IoMenu size={28} />}
         </button>
       </div>
 
@@ -114,30 +107,35 @@ const AdminSidebar = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed top-0 left-0 w-full max-w-[16vw] min-h-screen bg-white border-r border-gray-300 flex flex-col justify-between z-40 shadow-md md:shadow-none"
+            className={`fixed top-0 left-0 h-screen bg-white border-r border-gray-300 flex flex-col justify-between z-40 shadow-md transition-all 
+              ${isDesktop ? "w-[220px]" : "w-[75%] sm:w-[60%]"}`}
           >
-            {/* Top */}
+            {/* Top section */}
             <div className="pt-8">
-              <Link to="/" className="flex items-center justify-center mb-10" onClick={() => setIsOpen(false)}>
-                <h1 className="text-3xl font-bold text-green-600">eMedsHub</h1>
+              <Link
+                to="/"
+                onClick={() => !isDesktop && setIsOpen(false)}
+                className="flex items-center justify-center mb-10"
+              >
+                <h1 className="text-2xl font-bold text-green-600">eMedsHub</h1>
               </Link>
 
-              <nav className="flex flex-col space-y-1 px-0">
+              <nav className="flex flex-col space-y-1">
                 {menuItems.map(({ label, path, icon }) => (
                   <motion.div key={path} variants={itemVariants}>
                     <Link
                       to={path}
-                      onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-4 px-6 py-3 rounded-r-full transition-all duration-300 mx-2 ${
+                      onClick={() => !isDesktop && setIsOpen(false)}
+                      className={`flex items-center gap-3 px-5 py-3 rounded-r-full transition-all duration-300 ${
                         currentPath === path
                           ? "bg-green-100 text-green-700 font-semibold shadow-sm"
                           : "text-gray-700 hover:bg-green-50 hover:text-green-700"
                       }`}
                     >
-                      <span className="text-green-600 flex-shrink-0" style={{ width: 24, display: "inline-flex", justifyContent: "center" }}>
+                      <span className="text-green-600 flex-shrink-0 w-5 flex justify-center">
                         {icon}
                       </span>
-                      <span className="text-[15px]">{label}</span>
+                      <span className="text-[14px]">{label}</span>
                     </Link>
                   </motion.div>
                 ))}
@@ -145,8 +143,10 @@ const AdminSidebar = () => {
             </div>
 
             {/* Bottom */}
-            <div className="border-t mt-6 py-4 px-6 bg-gray-50">
-              <p className="text-sm text-gray-500 mb-2 truncate">{authUser?.name || "Admin"}</p>
+            <div className="border-t mt-6 py-4 px-5 bg-gray-50">
+              <p className="text-sm text-gray-500 mb-2 truncate">
+                {authUser?.name || "Admin"}
+              </p>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 text-red-500 font-semibold hover:text-red-600 transition-colors"
@@ -159,15 +159,16 @@ const AdminSidebar = () => {
         )}
       </AnimatePresence>
 
-      {/* White overlay for mobile (below sidebar via z-index) */}
+      {/* Overlay */}
       {isOpen && !isDesktop && (
         <div
-          className="fixed inset-0 bg-white bg-opacity-60 md:hidden z-30 backdrop-blur-[1px]"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-30"
           onClick={() => setIsOpen(false)}
-          role="button"
-          aria-label="Close menu"
         />
       )}
+
+      {/* Page content offset for desktop */}
+      {isDesktop && <div className="w-[100px]" />}
     </>
   );
 };
