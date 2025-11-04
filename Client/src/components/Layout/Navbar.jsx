@@ -10,18 +10,18 @@ const Navbar = () => {
   const [mobileSiteActive, setMobileSiteActive] = useState(false);
 
   const dropdownItems = {
-    // MEDICINE: [
-    //   { title: "Generics (Allophathic)", link: "" },
-    //   { title: "Generics (Herbal)", link: "" },
-    //   { title: "Brand Name (Allophathic)", link: "" },
-    //   { title: "Brand Name (Herbal)", link: "" },
-    //   { title: "Pharmaceuticals", link: "" },
-    //   { title: "Dosage Forms (Herbal)", link: "" },
-    // ],
     MORE: [
       { title: "News", link: "/news" },
       { title: "Doctors Advice", link: "/doctor-advice" },
       { title: "Medical Test", link: "/tests" },
+    ],
+    MEDICINE: [
+      { title: "Generics (Allopathic)", link: "/generics-allophathic" },
+      { title: "Generics (Herbal)", link: "/generics-herbal" },
+    ],
+    BRANDS: [
+      { title: "Brands (Allopathic)", link: "/brands-allophathic" },
+      { title: "Brands (Herbal)", link: "/brands-herbal" },
     ],
   };
   const toggleMobileSideMenu = () => {
@@ -76,13 +76,23 @@ const Navbar = () => {
               </div>
 
               <ul className="space-y-4">
-                <Link
-                  to="/generics"
-                  className="block w-full"
-                  onClick={() => setMobileSiteActive(false)}
-                >
-                  <li className="font-medium">GENERICS</li>
-                </Link>
+                <li className="font-medium">GENERICS</li>
+                <ul className="pl-3 space-y-2">
+                  {dropdownItems.MEDICINE.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="text-sm text-gray-600 cursor-pointer"
+                    >
+                      <Link
+                        to={item.link}
+                        className="block w-full"
+                        onClick={() => setMobileSiteActive(false)}
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
 
                 <ul className="pl-3 space-y-2"></ul>
                 <Link
@@ -93,13 +103,23 @@ const Navbar = () => {
                   <li className="font-medium">PHARMACEUTICALS</li>
                 </Link>
 
-                <Link
-                  to="/brands"
-                  className="block w-full"
-                  onClick={() => setMobileSiteActive(false)}
-                >
-                  <li className="font-medium">BRANDS</li>
-                </Link>
+                <li className="font-medium">BRANDS</li>
+                <ul className="pl-3 space-y-2">
+                  {dropdownItems.BRANDS.map((item, idx) => (
+                    <li
+                      key={idx}
+                      className="text-sm text-gray-600 cursor-pointer"
+                    >
+                      <Link
+                        to={item.link}
+                        className="block w-full"
+                        onClick={() => setMobileSiteActive(false)}
+                      >
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
 
                 <li className="font-medium">MORE</li>
                 <ul className="pl-3 space-y-2">
@@ -134,18 +154,10 @@ const Navbar = () => {
           onMouseEnter={() => setOpenDropdown("MEDICINE")}
           onMouseLeave={() => setOpenDropdown(null)}
         >
-          {/* <p className="font-medium text-sm hover:text-secondary hover:underline transition-all duration-300 p-3 flex items-center gap-1">
+          <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
             <span>GENERICS</span>
-            {/* <IoIosArrowDown size={16} /> */}
-          {/* </p> */}
-
-          <Link
-            to="/generics"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
-          >
-            GENERICS
-          </Link>
-          {/* 
+            <IoIosArrowDown size={16} />
+          </p>
           <AnimatePresence>
             {openDropdown === "MEDICINE" && (
               <motion.ul
@@ -153,7 +165,7 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="absolute left-0 shadow-lg rounded-md p-3 w-full min-w-[18rem] z-50 bg-white"
+                className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
               >
                 {dropdownItems.MEDICINE.map((item, idx) => (
                   <motion.li
@@ -162,12 +174,12 @@ const Navbar = () => {
                     transition={{ type: "tween", duration: 0.2 }}
                     className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
                   >
-                    <Link to="#">{item.title}</Link>
+                    <Link to={item.link}>{item.title}</Link>
                   </motion.li>
                 ))}
               </motion.ul>
             )}
-          </AnimatePresence> */}
+          </AnimatePresence>
         </li>
 
         {/* INDICATIONS */}
@@ -178,13 +190,39 @@ const Navbar = () => {
           PHARMACEUTICALS
         </Link>
 
-        {/* DRUG CLASSES */}
-        <Link
-          to="/brands"
-          className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+        {/* Brands with dropdown */}
+        <li
+          className="relative group cursor-pointer"
+          onMouseEnter={() => setOpenDropdown("BRANDS")}
+          onMouseLeave={() => setOpenDropdown(null)}
         >
-          BRANDS
-        </Link>
+          <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
+            <span>BRANDS</span>
+            <IoIosArrowDown size={16} />
+          </p>
+          <AnimatePresence>
+            {openDropdown === "BRANDS" && (
+              <motion.ul
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
+              >
+                {dropdownItems.BRANDS.map((item, idx) => (
+                  <motion.li
+                    key={idx}
+                    whileHover={{ x: 8, color: "#0d9488" }}
+                    transition={{ type: "tween", duration: 0.2 }}
+                    className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
+                  >
+                    <Link to={item.link}>{item.title}</Link>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
+        </li>
 
         {/* MORE with dropdown */}
         <li

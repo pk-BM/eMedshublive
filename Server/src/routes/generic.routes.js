@@ -7,8 +7,10 @@ import {
   createGeneric,
   deleteGeneric,
   genericOptions,
+  getAllopathicGenerics,
   getGenericById,
   getGenerics,
+  getHerbalGenerics,
   updateGeneric,
 } from "../controller/generic.controller.js";
 
@@ -32,8 +34,10 @@ router.post(
   ]),
   createGeneric
 );
-router.get("/getAll",  getGenerics);
-router.get("/:id",  getGenericById);
+router.get("/getAll", getGenerics);
+router.get("/getAllopathicGenerics", getAllopathicGenerics);
+router.get("/getHerbalGenerics", getHerbalGenerics);
+router.get("/:id", getGenericById);
 router.put(
   "/update/:id",
   isAuthenticated,

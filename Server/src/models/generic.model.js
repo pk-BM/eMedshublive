@@ -12,7 +12,7 @@ const genericSchema = new mongoose.Schema(
     },
     allophaticOrHerbal: {
       type: String,
-      enum: ["Allophatic", "Herbal"],
+      enum: ["Allopathic", "Herbal"],
     },
     structureImage: {
       type: String, // image URL

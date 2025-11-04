@@ -12,7 +12,7 @@ const brandSchema = new mongoose.Schema(
     },
     allophaticOrHerbal: {
       type: String,
-      enum: ["Allophatic", "Herbal"],
+      enum: ["Allopathic", "Herbal"],
     },
     generic: {
       type: mongoose.Schema.Types.ObjectId,

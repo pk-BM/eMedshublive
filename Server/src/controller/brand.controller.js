@@ -51,10 +51,55 @@ export const createBrand = async (req, res) => {
   }
 };
 
-
 export const getBrands = async (req, res) => {
   try {
     const brands = await Brand.find()
+      .populate("generic", "name therapeuticClass")
+      .populate("manufacturer", "name")
+      .populate("createdBy", "name email");
+
+    if (!brands || brands.length === 0) {
+      return sendResponse(res, 404, false, "No brands found", null);
+    }
+
+    return sendResponse(res, 200, true, "Brands fetched successfully", brands);
+  } catch (error) {
+    console.error("Error in getBrands:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};
+export const getAllopathicBrands = async (req, res) => {
+  try {
+    const brands = await Brand.find({ allophaticOrHerbal: "Allopathic" })
+      .populate("generic", "name therapeuticClass")
+      .populate("manufacturer", "name")
+      .populate("createdBy", "name email");
+
+    if (!brands || brands.length === 0) {
+      return sendResponse(res, 404, false, "No brands found", null);
+    }
+
+    return sendResponse(res, 200, true, "Brands fetched successfully", brands);
+  } catch (error) {
+    console.error("Error in getBrands:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};
+export const getHerbalBrands = async (req, res) => {
+  try {
+    const brands = await Brand.find({ allophaticOrHerbal: "Herbal" })
       .populate("generic", "name therapeuticClass")
       .populate("manufacturer", "name")
       .populate("createdBy", "name email");
@@ -154,7 +199,6 @@ export const updateBrand = async (req, res) => {
     );
   }
 };
-
 
 export const deleteBrand = async (req, res) => {
   try {

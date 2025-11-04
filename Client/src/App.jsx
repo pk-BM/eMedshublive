@@ -46,14 +46,18 @@ const App = () => {
         <Route path="/news" element={<NewsPage />} />
         <Route path="/tests" element={<TestPage />} />
         <Route path="/tests/:id" element={<TestDetails />} />
-        <Route path="/brands" element={<Brand />} />
+
+        <Route path="/brands-allophathic" element={<Brand />} />
+        <Route path="/brands-herbal" element={<Brand />} />
         <Route path="/brands/:id" element={<BrandDetail />} />
-        <Route path="/generics" element={<Generic />} />
+
+        <Route path="/generics-allophathic" element={<Generic />} />
+        <Route path="/generics-herbal" element={<Generic />} />
         <Route path="/generics/:id" element={<GenericDetail />} />
+
         <Route path="/pharmaceuticals" element={<Pharmaceuticals />} />
         <Route path="/pharmaceuticals/:id" element={<PharmaceuticalDetail />} />
         <Route path="/doctor-advice" element={<DoctorAdvice />} />
-
 
         {/* Hidden Route */}
         <Route

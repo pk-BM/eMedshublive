@@ -90,6 +90,62 @@ export const getGenerics = async (req, res) => {
     );
   }
 };
+export const getAllopathicGenerics = async (req, res) => {
+  try {
+    const generics = await Generic.find({
+      allophaticOrHerbal: "Allopathic",
+    }).sort({ createdAt: -1 });
+
+    if (!generics || generics.length === 0) {
+      return sendResponse(res, 404, false, "No generic records found", null);
+    }
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Generics fetched successfully",
+      generics
+    );
+  } catch (error) {
+    console.error("Error in getGenerics controller:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};
+export const getHerbalGenerics = async (req, res) => {
+  try {
+    const generics = await Generic.find({
+      allophaticOrHerbal: "Herbal",
+    }).sort({ createdAt: -1 });
+
+    if (!generics || generics.length === 0) {
+      return sendResponse(res, 404, false, "No generic records found", null);
+    }
+
+    return sendResponse(
+      res,
+      200,
+      true,
+      "Generics fetched successfully",
+      generics
+    );
+  } catch (error) {
+    console.error("Error in getGenerics controller:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};
 
 export const getGenericById = async (req, res) => {
   try {

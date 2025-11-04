@@ -24,9 +24,12 @@ router.post(
   createBrand
 );
 
-router.get("/getAll",  getBrands);
+router.get("/getAll", getBrands);
 
-router.get("/:id",  getBrandById);
+router.get("/getAllopathicBrands", getBrands);
+router.get("/getHerbalBrands", getBrands);
+
+router.get("/:id", getBrandById);
 
 router.put(
   "/update/:id",

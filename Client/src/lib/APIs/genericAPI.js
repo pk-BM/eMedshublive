@@ -20,6 +20,14 @@ export const GetGenerics = async () => {
   const response = await axiosInstance.get("/generic/getAll");
   return response.data;
 };
+export const GetAllopathicGenerics = async () => {
+  const response = await axiosInstance.get("/generic/getAllopathicGenerics");
+  return response.data;
+};
+export const GetAllHerbalGenerics = async () => {
+  const response = await axiosInstance.get("/generic/getHerbalGenerics");
+  return response.data;
+};
 
 export const GetGenericById = async (id) => {
   const response = await axiosInstance.get(`/generic/${id}`);
