@@ -35,6 +35,8 @@ app.get("/", (req, res) => {
   res.send("Server is running at", PORT);
 });
 
+// test
+
 app.use("/api/auth", AuthRoutes);
 app.use("/api/generic", GenericRoutes);
 app.use("/api/pharma", PharmaceuticalRoutes);
