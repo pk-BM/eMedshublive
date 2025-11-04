@@ -93,7 +93,7 @@ export const getGenerics = async (req, res) => {
 export const getAllopathicGenerics = async (req, res) => {
   try {
     const generics = await Generic.find({
-      allophaticOrHerbal: "Allopathic",
+      allopathicOrHerbal: "Allopathic",
     }).sort({ createdAt: -1 });
 
     if (!generics || generics.length === 0) {
@@ -121,7 +121,7 @@ export const getAllopathicGenerics = async (req, res) => {
 export const getHerbalGenerics = async (req, res) => {
   try {
     const generics = await Generic.find({
-      allophaticOrHerbal: "Herbal",
+      allopathicOrHerbal: "Herbal",
     }).sort({ createdAt: -1 });
 
     if (!generics || generics.length === 0) {

@@ -47,6 +47,6 @@ export const GetAllopathicBrands = async () => {
   return response.data;
 };
 export const GetAllHerbalBrands = async () => {
-  const response = await axiosInstance.get("/brand/getAllopathicBrands");
+  const response = await axiosInstance.get("/brand/getHerbalBrands");
   return response.data;
 };

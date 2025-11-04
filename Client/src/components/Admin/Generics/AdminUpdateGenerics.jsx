@@ -238,7 +238,7 @@ const AdminUpdateGenerics = () => {
               required
             >
               <option value="">Select Type</option>
-              <option value="Allophatic">Allopathic</option>
+              <option value="Allopathic">Allopathic</option>
               <option value="Herbal">Herbal</option>
             </select>
           </div>

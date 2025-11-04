@@ -74,12 +74,14 @@ export const getBrands = async (req, res) => {
     );
   }
 };
+
 export const getAllopathicBrands = async (req, res) => {
   try {
-    const brands = await Brand.find({ allophaticOrHerbal: "Allopathic" })
+    const brands = await Brand.find({ allopathicOrHerbal: "Allopathic" })
       .populate("generic", "name therapeuticClass")
       .populate("manufacturer", "name")
-      .populate("createdBy", "name email");
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 });
 
     if (!brands || brands.length === 0) {
       return sendResponse(res, 404, false, "No brands found", null);
@@ -97,12 +99,14 @@ export const getAllopathicBrands = async (req, res) => {
     );
   }
 };
+
 export const getHerbalBrands = async (req, res) => {
   try {
-    const brands = await Brand.find({ allophaticOrHerbal: "Herbal" })
+    const brands = await Brand.find({ allopathicOrHerbal: "Herbal" })
       .populate("generic", "name therapeuticClass")
       .populate("manufacturer", "name")
-      .populate("createdBy", "name email");
+      .populate("createdBy", "name email")
+      .sort({ createdAt: -1 });
 
     if (!brands || brands.length === 0) {
       return sendResponse(res, 404, false, "No brands found", null);

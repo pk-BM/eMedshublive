@@ -10,6 +10,8 @@ import {
   getBrandById,
   updateBrand,
   deleteBrand,
+  getAllopathicBrands,
+  getHerbalBrands,
 } from "../controller/brand.controller.js";
 
 const router = express.Router();
@@ -26,8 +28,8 @@ router.post(
 
 router.get("/getAll", getBrands);
 
-router.get("/getAllopathicBrands", getBrands);
-router.get("/getHerbalBrands", getBrands);
+router.get("/getAllopathicBrands", getAllopathicBrands);
+router.get("/getHerbalBrands", getHerbalBrands);
 
 router.get("/:id", getBrandById);
 
