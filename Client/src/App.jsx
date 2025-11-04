@@ -22,6 +22,8 @@ import Pharmaceuticals from "./pages/Pharmaceutical/Pharmaceutical";
 import PharmaceuticalDetail from "./pages/PharmaceuticalDetail/PharmaceuticalDetail";
 import DoctorAdvice from "./pages/DoctorAdvice/DoctorAdvice";
 import TestDetails from "./pages/TestDetails/TestDetails";
+import GenericAllopathic from "./pages/GenericAllopathic/GenericAllopathic";
+import BrandAllopathic from "./pages/BrandAllopathic/BrandAllopathic"
 
 const HIDE_NAVBAR = ["/v1/admin/dashboard"];
 const HIDE_FOOTER = ["/v1/admin/dashboard"];
@@ -47,11 +49,11 @@ const App = () => {
         <Route path="/tests" element={<TestPage />} />
         <Route path="/tests/:id" element={<TestDetails />} />
 
-        <Route path="/brands-allophathic" element={<Brand />} />
+        <Route path="/brands-allophathic" element={<BrandAllopathic/>} />
         <Route path="/brands-herbal" element={<Brand />} />
         <Route path="/brands/:id" element={<BrandDetail />} />
 
-        <Route path="/generics-allophathic" element={<Generic />} />
+        <Route path="/generics-allophathic" element={<GenericAllopathic />} />
         <Route path="/generics-herbal" element={<Generic />} />
         <Route path="/generics/:id" element={<GenericDetail />} />
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BrandCard from "../../components/Drugs/BrandCard";
-import { GetAllHerbalBrands } from "../../lib/APIs/brandsAPI";
+import { GetAllopathicBrands } from "../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
 import { MdOutlineMedicalServices } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
@@ -26,7 +26,7 @@ const DrugClasses = () => {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await GetAllHerbalBrands();
+        const response = await GetAllopathicBrands();
         if (response?.success && Array.isArray(response.data)) {
           setBrands(response.data);
         } else {

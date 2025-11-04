@@ -8,9 +8,9 @@ import { GiMedicines, GiTestTubes, GiPill, GiChemicalDrop } from "react-icons/gi
 import { RiMedicineBottleFill } from "react-icons/ri";
 import { TbTestPipe2 } from "react-icons/tb";
 import Pagination from "../../components/Layout/Pagination";
-import { GetAllHerbalGenerics } from "../../lib/APIs/genericAPI";
+import { GetAllopathicGenerics } from "../../lib/APIs/genericAPI";
 
-const Generic = () => {
+const GenericAllopathic = () => {
   const [generics, setGenerics] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ const Generic = () => {
   const fetchGenerics = async () => {
     try {
       setLoading(true);
-      const response = await GetAllHerbalGenerics();
+      const response = await GetAllopathicGenerics();
       setGenerics(response?.data || []);
     } catch (error) {
       toast.error("Error fetching generics");
@@ -117,4 +117,4 @@ const Generic = () => {
   );
 };
 
-export default Generic;
+export default GenericAllopathic;

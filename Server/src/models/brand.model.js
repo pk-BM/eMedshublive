@@ -10,7 +10,7 @@ const brandSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    allophaticOrHerbal: {
+    allopathicOrHerbal: {
       type: String,
       enum: ["Allopathic", "Herbal"],
     },

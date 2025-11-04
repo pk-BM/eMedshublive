@@ -151,6 +151,24 @@ const AdminCreateBrand = () => {
               </select>
             </div>
 
+          <div>
+            <label className="block text-black font-medium mb-2">
+              Allopathic or Herbal
+            </label>
+            <select
+              name="allopathicOrHerbal"
+              value={formData.allopathicOrHerbal}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              required
+            >
+              <option value="">Select Type</option>
+              <option value="allophatic">Allopathic</option>
+              <option value="herbal"
+              >Herbal</option>
+            </select>
+          </div>
+
             <div>
               <label className="block text-black font-medium mb-2">
                 Manufacturer
