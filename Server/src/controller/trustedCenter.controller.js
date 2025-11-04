@@ -188,7 +188,7 @@ export const deleteTrustedCenter = async (req, res) => {
 };
 export const TrustedCenterOptions = async (req, res) => {
   try {
-    const response = await TrustedCenter.find().select("name");
+    const response = await TrustedCenter.find().select("name logo");
     if (!response) {
       return sendResponse(res, 400, false, "No options available", null);
     }

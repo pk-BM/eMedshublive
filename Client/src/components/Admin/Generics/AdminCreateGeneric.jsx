@@ -188,8 +188,8 @@ const AdminCreateGeneric = () => {
               required
             >
               <option value="">Select Type</option>
-              <option value="allophatic">Allopathic</option>
-              <option value="herbal"
+              <option value="Allopathic">Allopathic</option>
+              <option value="Herbal"
               >Herbal</option>
             </select>
           </div>

@@ -83,6 +83,7 @@ const AdminUpdateGenerics = () => {
           therapeuticClass: fetchedData.therapeuticClass || "",
           storageCondition: fetchedData.storageCondition || "",
           isActive: fetchedData.isActive ?? true,
+          allopathicOrHerbal: fetchedData?.allopathicOrHerbal || "",
         });
 
         setPreviewImage(fetchedData.structureImage || null);
@@ -237,9 +238,8 @@ const AdminUpdateGenerics = () => {
               required
             >
               <option value="">Select Type</option>
-              <option value="allophatic">Allopathic</option>
-              <option value="herbal"
-              >Herbal</option>
+              <option value="Allophatic">Allopathic</option>
+              <option value="Herbal">Herbal</option>
             </select>
           </div>
 
