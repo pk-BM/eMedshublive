@@ -17,7 +17,7 @@ const AllBrands = () => {
     try {
       setLoading(true);
       const response = await GetAllBrands();
-      setBrands(response.data);
+      setBrands(response.data.reverse());
     } catch (error) {
       console.error("Error fetching brands:", error);
     } finally {

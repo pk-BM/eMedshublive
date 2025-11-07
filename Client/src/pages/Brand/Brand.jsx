@@ -15,7 +15,6 @@ const DrugClasses = () => {
   const drugCategories = [
     "All Products",
     "New Products",
-    "Bioequivalent Products",
     // "Category A",
     // "Category B",
     // "Category C",
@@ -46,11 +45,7 @@ const DrugClasses = () => {
   const getFilteredBrands = () => {
     let filtered = brands;
 
-    if (selectedClass === "Bioequivalent Products") {
-      filtered = brands.filter((item) =>
-        item.productType?.toLowerCase().includes("bio equivalent")
-      );
-    } else if (selectedClass === "New Products") {
+    if (selectedClass === "New Products") {
       filtered = [...brands]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 10);
