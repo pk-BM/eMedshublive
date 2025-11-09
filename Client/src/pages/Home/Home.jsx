@@ -8,6 +8,7 @@ import { GetGenerics } from "../../lib/APIs/genericAPI";
 import Brands from "../../components/Home/Brands/Brands";
 import Test from "../../components/Home/Test/Test";
 import News from "../../components/Home/News/News";
+import DoctorCarousel from "../../components/Home/DoctorCarousel/DoctorCarousel";
 
 const Home = () => {
   const [generics, setGenerics] = useState([]);
@@ -132,6 +133,16 @@ const Home = () => {
         text="Find complete details of available medical tests, procedures, and reports."
       />
       <Test />
+
+      <Heading
+        heading="Our Leaders"
+        text="Effective leadership is characterized by vision, integrity, and the ability to empower others"
+      />
+    <div className="min-h-screen flex items-center justify-center">
+      <DoctorCarousel />
+    </div>
+
+
     </div>
   );
 };

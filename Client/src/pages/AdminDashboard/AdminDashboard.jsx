@@ -27,6 +27,9 @@ import AdminUpdateTest from "../../components/Admin/Tests/AdminUpdateTests";
 import AllTrustedCenter from "../../components/Admin/TrustedCenter/AllTrustedCenter";
 import AdminCreateTrustedCenter from "../../components/Admin/TrustedCenter/AdminCreateTestedCenter";
 import AdminUpdateTrustedCenter from "../../components/Admin/TrustedCenter/AdminUpdateTestedCenter";
+import AdminCreateLeader from "../../components/Admin/Leaders/AdminCreateLeader";
+import AllLeader from "../../components/Admin/Leaders/AllLeader";
+import AdminUpdateLeader from "../../components/Admin/Leaders/AdminUpdateLeader";
 
 const AdminDashboard = () => {
   return (
@@ -82,6 +85,10 @@ const AdminDashboard = () => {
           <Route path="/doctors" element={<AllDoctors />} />
           <Route path="/doctors/create" element={<AdminCreateDoctorAdvice />} />
           <Route path="/doctors/update/:id" element={<AdminUpdateDoctor />} />
+
+          <Route path="/leaders" element={<AllLeader />} />
+          <Route path="/leaders/create" element={<AdminCreateLeader />} />
+          <Route path="/leaders/update/:id" element={<AdminUpdateLeader />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
