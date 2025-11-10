@@ -53,9 +53,9 @@ const Home = () => {
         heading="Our Leaders"
         text="Effective leadership is characterized by vision, integrity, and the ability to empower others"
       />
-      <div className="min-h-screen flex items-center justify-center">
+      {/* <div className="min-h-screen flex items-center justify-center"> */}
         <DoctorCarousel />
-      </div>
+      {/* </div> */}
 
 
     </div>

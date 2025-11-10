@@ -69,17 +69,6 @@ const PharmaceuticalDetail = () => {
             {pharmaceutical.name}
           </h1>
         </div>
-        {/* <div className="flex items-center gap-2">
-          {pharmaceutical.isActive ? (
-            <span className="flex items-center gap-1 text-[#34d399] font-medium">
-              <FaCheckCircle /> Active
-            </span>
-          ) : (
-            <span className="flex items-center gap-1 text-[#ec4899] font-medium">
-              <FaTimesCircle /> Inactive
-            </span>
-          )}
-        </div> */}
       </motion.div>
 
       {/* Main Card */}
