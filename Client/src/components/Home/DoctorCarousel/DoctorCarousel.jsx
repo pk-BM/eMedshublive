@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { GetLeaders } from "../../../lib/APIs/leaderAPI";
 
 export default function LatestLeaders() {
   const [leaders, setLeaders] = useState([]);
 
+  const GetLeader = async () => {
+    const response = await GetLeaders()
+    setLeaders(response?.data)
+  }
+
   useEffect(() => {
-    axios
-      .get("/api/leaders") // same endpoint
-      .then((res) => setLeaders(res.data))
-      .catch((err) => console.error(err));
+    GetLeader()
   }, []);
 
   return (

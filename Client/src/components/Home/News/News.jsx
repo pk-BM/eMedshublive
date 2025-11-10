@@ -5,6 +5,7 @@ import { FiArrowRight } from "react-icons/fi";
 import { GetAllNews } from "../../../lib/APIs/newsAPI";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { GetLeaders } from "../../../lib/APIs/leaderAPI";
 
 export default function LatestLeaders() {
   const [leaders, setLeaders] = useState([]);
@@ -14,7 +15,7 @@ export default function LatestLeaders() {
     const fetchLeaders = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/api/leaders");
+        const response = await GetLeaders()
         const fetched = response?.data || [];
 
         const sortedLeaders = fetched.sort(

@@ -61,6 +61,7 @@ const AdminSidebar = () => {
     { label: "Doctors Advice", path: "/admin/doctors", icon: <MdHealthAndSafety size={22} /> },
     { label: "Pharmaceuticals", path: "/admin/pharmaceuticals", icon: <MdLocalPharmacy size={22} /> },
     { label: "Trusted Center", path: "/admin/trusted-center", icon: <MdLocalPharmacy size={22} /> },
+    { label: "Leader", path: "/admin/leaders", icon: <MdLocalPharmacy size={22} /> },
   ];
 
   const sidebarVariants = {

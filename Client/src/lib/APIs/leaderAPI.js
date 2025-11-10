@@ -22,7 +22,7 @@ export const GetLeaders = async () => {
 };
 
 export const GetLeaderById = async (id) => {
-  const response = await axiosInstance.get(`/leader/${id}`);
+  const response = await axiosInstance.get(`/leader/get/${id}`);
   return response.data;
 };
 

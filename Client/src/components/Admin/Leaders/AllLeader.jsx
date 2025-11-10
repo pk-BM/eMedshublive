@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { GetAllLeaders, DeleteLeader } from "../../../lib/APIs/leaderAPI"; // Adjust paths
 import { MdDelete, MdEdit } from "react-icons/md";
 import { toast } from "react-toastify";
+import { DeleteLeader, GetLeaders } from "../../../lib/APIs/leaderAPI"
 
 const AllLeader = () => {
   const [loading, setLoading] = useState(false);
@@ -15,7 +15,7 @@ const AllLeader = () => {
   const fetchLeaders = async () => {
     try {
       setLoading(true);
-      const response = await GetAllLeaders();
+      const response = await GetLeaders();
       setLeaders(response.data);
     } catch (error) {
       console.log(error);
@@ -67,7 +67,7 @@ const AllLeader = () => {
             className="border border-gray-300 rounded-md py-2 px-3 w-full max-w-sm text-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
           />
           <Link
-            to="/admin/leader/create"
+            to="/admin/leaders/create"
             className="bg-green-600 hover:bg-green-700 text-white text-sm py-2 px-5 rounded-md shadow-sm transition-all"
           >
             Add Leader
@@ -113,7 +113,7 @@ const AllLeader = () => {
                           className="text-green-600 hover:text-green-700 cursor-pointer transition-colors"
                           onClick={() => handleDelete(item._id)}
                         />
-                        <Link to={`/admin/leader/update/${item._id}`}>
+                        <Link to={`/admin/leaders/update/${item._id}`}>
                           <MdEdit
                             size={20}
                             className="text-green-600 hover:text-green-700 cursor-pointer transition-colors"
