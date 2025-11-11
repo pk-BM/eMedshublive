@@ -1,7 +1,6 @@
 import { axiosInstance } from "../axios";
 import { toast } from "react-toastify";
 
-// ✅ CREATE Advertisement
 export const CreateAdvertisement = async (formData) => {
   try {
     const fd = new FormData();
@@ -23,7 +22,6 @@ export const CreateAdvertisement = async (formData) => {
   }
 };
 
-// ✅ GET ALL Advertisements
 export const GetAllAdvertisements = async () => {
   try {
     const response = await axiosInstance.get("/advertisement/getAll");
@@ -34,7 +32,7 @@ export const GetAllAdvertisements = async () => {
   }
 };
 
-// ✅ GET Advertisement BY ID
+
 export const GetAdvertisementById = async (id) => {
   try {
     const response = await axiosInstance.get(`/advertisement/${id}`);
@@ -45,7 +43,7 @@ export const GetAdvertisementById = async (id) => {
   }
 };
 
-// ✅ UPDATE Advertisement
+
 export const UpdateAdvertisement = async (id, formData) => {
   try {
     const fd = new FormData();
@@ -67,7 +65,7 @@ export const UpdateAdvertisement = async (id, formData) => {
   }
 };
 
-// ✅ DELETE Advertisement
+
 export const DeleteAdvertisement = async (id) => {
   try {
     const response = await axiosInstance.delete(`/advertisement/delete/${id}`);

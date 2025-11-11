@@ -17,3 +17,8 @@ export const GetMe = async () => {
   const response = await axiosInstance.get("/auth/getMe");
   return response.data;
 };
+
+export const Analytics = async () => {
+  const response = await axiosInstance.get("/auth/analytics");
+  return response.data
+}

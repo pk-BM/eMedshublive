@@ -2,19 +2,26 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   IoMenu,
-  IoBagHandleOutline,
-  IoFlaskOutline,
   IoNewspaperOutline,
-  IoBusinessOutline,
+  IoFlaskOutline,
+  IoAnalyticsOutline,
   IoPeopleOutline,
 } from "react-icons/io5";
 import {
   MdClose,
   MdHealthAndSafety,
-  MdLocalPharmacy,
   MdLogout,
+  MdLocalPharmacy,
+  MdStars,
 } from "react-icons/md";
-import { GiMedicines } from "react-icons/gi";
+import {
+  FaPills,
+  FaBullhorn,
+  FaUserMd,
+  FaUserShield,
+  FaIndustry,
+} from "react-icons/fa";
+import { GiMedicines, GiHospitalCross } from "react-icons/gi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Logout } from "../../lib/APIs/authAPI";
@@ -51,17 +58,19 @@ const AdminSidebar = () => {
     }
   };
 
+  // 🟢 Updated icon mapping for each route
   const menuItems = [
-    { label: "Analytics", path: "/admin/dashboard", icon: <IoBagHandleOutline size={22} /> },
+    { label: "Analytics", path: "/admin/dashboard", icon: <IoAnalyticsOutline size={22} /> },
     { label: "News", path: "/admin/news", icon: <IoNewspaperOutline size={22} /> },
-    { label: "Brands", path: "/admin/brands", icon: <IoBusinessOutline size={22} /> },
+    { label: "Brands", path: "/admin/brands", icon: <FaIndustry size={22} /> },
     { label: "Generic", path: "/admin/generic", icon: <GiMedicines size={22} /> },
     { label: "Medical Test", path: "/admin/medical-test", icon: <IoFlaskOutline size={22} /> },
-    { label: "Advertisement", path: "/admin/advertisement", icon: <IoPeopleOutline size={22} /> },
-    { label: "Doctors Advice", path: "/admin/doctors", icon: <MdHealthAndSafety size={22} /> },
+    { label: "Advertisement", path: "/admin/advertisement", icon: <FaBullhorn size={22} /> },
+    { label: "Doctors Advice", path: "/admin/doctors", icon: <FaUserMd size={22} /> },
     { label: "Pharmaceuticals", path: "/admin/pharmaceuticals", icon: <MdLocalPharmacy size={22} /> },
-    { label: "Trusted Center", path: "/admin/trusted-center", icon: <MdLocalPharmacy size={22} /> },
-    { label: "Leader", path: "/admin/leaders", icon: <MdLocalPharmacy size={22} /> },
+    { label: "Trusted Center", path: "/admin/trusted-center", icon: <FaUserShield size={22} /> },
+    { label: "Leader", path: "/admin/leaders", icon: <MdStars size={22} /> },
+    { label: "Banners", path: "/admin/banners", icon: <MdStars size={22} /> },
   ];
 
   const sidebarVariants = {
@@ -127,11 +136,10 @@ const AdminSidebar = () => {
                     <Link
                       to={path}
                       onClick={() => !isDesktop && setIsOpen(false)}
-                      className={`flex items-center gap-3 px-5 py-3 rounded-r-full transition-all duration-300 ${
-                        currentPath === path
-                          ? "bg-green-100 text-green-700 font-semibold shadow-sm"
-                          : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-                      }`}
+                      className={`flex items-center gap-3 px-5 py-3 rounded-r-full transition-all duration-300 ${currentPath === path
+                        ? "bg-green-100 text-green-700 font-semibold shadow-sm"
+                        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
+                        }`}
                     >
                       <span className="text-green-600 flex-shrink-0 w-5 flex justify-center">
                         {icon}

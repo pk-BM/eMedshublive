@@ -69,7 +69,7 @@ const App = () => {
         {/* Hidden Route */}
         <Route
           path="/v1/admin/login"
-          element={!isAuthenticated ? <AdminLogin /> : <Navigate to="/" />}
+          element={!isAuthenticated ? <AdminLogin /> : <Navigate to="/admin/dashboard" />}
         />
         <Route
           element={

@@ -36,4 +36,4 @@ const advertisementSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Advertisement", advertisementSchema);
+  export default mongoose.model("Advertisement", advertisementSchema);

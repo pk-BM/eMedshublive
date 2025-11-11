@@ -1,7 +1,17 @@
+
 import Auth from "../models/auth.model.js";
 import { sendResponse } from "../utils/sendResponse.js";
 import { sendToken } from "../utils/sendToken.js";
 import bcrypt from "bcrypt";
+import Advertisement from "../models/advertisement.model.js";
+import Brand from "../models/brand.model.js";
+import DoctorAdvice from "../models/doctorAdvice.model.js";
+import Generic from "../models/generic.model.js";
+import Leader from "../models/leader.model.js";
+import MedicalTest from "../models/medicalTest.model.js";
+import News from "../models/news.model.js";
+import Pharmaceutical from "../models/pharmaceutical.model.js";
+import TrustedCenter from "../models/trustedCenter.model.js";
 
 export const Signup = async (req, res) => {
   const { name, email, role, password, confirmPassword } = req.body;
@@ -114,4 +124,54 @@ export const Logout = (req, res) => {
     sameSite: isProduction ? "None" : "Lax",
   });
   res.status(200).json({ success: true, message: "Logout successful" });
+};
+
+
+export const Analytics = async (req, res) => {
+  try {
+    // Fetch all counts in parallel (fastest way)
+    const [
+      totalAdvertisement,
+      totalBrand,
+      totalDoctorAdvice,
+      totalGeneric,
+      totalLeader,
+      totalMedicalTest,
+      totalNews,
+      totalPharmaceutical,
+      totalTrustedCenter,
+    ] = await Promise.all([
+      Advertisement.countDocuments(),
+      Brand.countDocuments(),
+      DoctorAdvice.countDocuments(),
+      Generic.countDocuments(),
+      Leader.countDocuments(),
+      MedicalTest.countDocuments(),
+      News.countDocuments(),
+      Pharmaceutical.countDocuments(),
+      TrustedCenter.countDocuments(),
+    ]);
+
+    // Send structured response
+    return sendResponse(res, 200, true, "Analytics fetched successfully", {
+      totalAdvertisement,
+      totalBrand,
+      totalDoctorAdvice,
+      totalGeneric,
+      totalLeader,
+      totalMedicalTest,
+      totalNews,
+      totalPharmaceutical,
+      totalTrustedCenter,
+    });
+  } catch (error) {
+    console.error("Error in Analytics controller:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
 };

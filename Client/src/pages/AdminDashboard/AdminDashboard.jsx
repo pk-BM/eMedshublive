@@ -30,6 +30,9 @@ import AdminUpdateTrustedCenter from "../../components/Admin/TrustedCenter/Admin
 import AdminCreateLeader from "../../components/Admin/Leaders/AdminCreateLeader";
 import AllLeader from "../../components/Admin/Leaders/AllLeader";
 import AdminUpdateLeader from "../../components/Admin/Leaders/AdminUpdateLeader";
+import AdminAllBanners from "../../components/Admin/Banner/AdminAllBanners";
+import AdminCreateBanner from "../../components/Admin/Banner/AdminCreateBanner";
+import AdminUpdateBanner from "../../components/Admin/Banner/AdminUpdateBanner";
 
 const AdminDashboard = () => {
   return (
@@ -89,6 +92,10 @@ const AdminDashboard = () => {
           <Route path="/leaders" element={<AllLeader />} />
           <Route path="/leaders/create" element={<AdminCreateLeader />} />
           <Route path="/leaders/update/:id" element={<AdminUpdateLeader />} />
+
+          <Route path="/banners" element={<AdminAllBanners />} />
+          <Route path="/banner/create" element={<AdminCreateBanner />} />
+          <Route path="/banner/update/:id" element={<AdminUpdateBanner />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
