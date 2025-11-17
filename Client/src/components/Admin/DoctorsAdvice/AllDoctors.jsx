@@ -23,7 +23,7 @@ const AllDoctors = () => {
       setDoctorAdvices(response?.data || []);
     } catch (error) {
       console.error("Error fetching doctor advices:", error);
-      toast.error("Failed to fetch doctor advice");
+      console.error("Failed to fetch doctor advice");
     } finally {
       setLoading(false);
     }

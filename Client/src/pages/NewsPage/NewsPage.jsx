@@ -22,7 +22,6 @@ const NewsPage = () => {
         setNewsList(response.data || []);
       } catch (error) {
         console.error("Error fetching news:", error);
-        toast.error("Failed to fetch news.");
       } finally {
         setLoading(false);
       }

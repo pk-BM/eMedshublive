@@ -24,7 +24,7 @@ const AllPharmaceuticals = () => {
       setPharmaceuticals(response.data || []);
     } catch (error) {
       console.error("Error fetching pharmaceuticals:", error);
-      toast.error("Failed to fetch pharmaceuticals.");
+      console.error("Failed to fetch pharmaceuticals.");
     } finally {
       setLoading(false);
     }

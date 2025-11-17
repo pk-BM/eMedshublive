@@ -26,7 +26,6 @@ const Pharmaceuticals = () => {
       }
     } catch (error) {
       console.error("Error fetching pharmaceuticals:", error);
-      toast.error("Error fetching pharmaceuticals");
     } finally {
       setLoading(false);
     }

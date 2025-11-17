@@ -22,7 +22,7 @@ const AllTests = () => {
       setTests(data);
       setFilteredTests(data);
     } catch (error) {
-      toast.error(`Error fetching tests: ${error.response?.data?.message || error.message}`);
+      console.error(` ${error.response?.data?.message || error.message}`);
     } finally {
       setLoading(false);
     }

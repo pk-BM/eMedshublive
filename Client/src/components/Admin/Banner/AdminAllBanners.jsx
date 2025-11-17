@@ -22,7 +22,7 @@ const AdminAllBanners = () => {
       setBanners(res.data || []);
       console.log(res.data)
     } catch (error) {
-      toast.error("Failed to fetch banners");
+      console.error("Failed to fetch banners");
     } finally {
       setLoading(false);
     }

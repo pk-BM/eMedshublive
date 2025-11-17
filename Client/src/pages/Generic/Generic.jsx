@@ -38,7 +38,7 @@ const Generic = () => {
       const response = await GetAllHerbalGenerics();
       setGenerics(response?.data || []);
     } catch (error) {
-      toast.error("Error fetching generics");
+      console.error("Error fetching generics");
       console.error(error);
     } finally {
       setLoading(false);

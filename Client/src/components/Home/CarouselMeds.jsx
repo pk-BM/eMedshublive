@@ -15,7 +15,6 @@ const CarouselMeds = () => {
       setImages(shuffleImages(bannerImages));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to fetch banners");
     }
   };
 

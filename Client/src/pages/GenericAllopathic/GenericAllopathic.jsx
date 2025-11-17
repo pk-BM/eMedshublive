@@ -38,7 +38,6 @@ const GenericAllopathic = () => {
       const response = await GetAllopathicGenerics();
       setGenerics(response?.data || []);
     } catch (error) {
-      toast.error("Error fetching generics");
       console.error(error);
     } finally {
       setLoading(false);

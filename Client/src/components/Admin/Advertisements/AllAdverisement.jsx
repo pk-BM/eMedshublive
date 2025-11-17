@@ -17,14 +17,14 @@ const AllAdvertisements = () => {
   const [deleteBrandLoading, setDeleteBrandLoading] = useState(false);
   const [deleteBrandsId, setDeleteBrandsId] = useState("");
 
-  // ✅ Fetch all advertisements
+  // Fetch all advertisements
   const fetchAdvertisements = async () => {
     try {
       setLoading(true);
       const res = await GetAllAdvertisements();
       setAdvertisements(res.data || []);
     } catch (error) {
-      toast.error("Failed to fetch advertisements");
+      console.error("Failed to fetch advertisements");
     } finally {
       setLoading(false);
     }
@@ -34,13 +34,13 @@ const AllAdvertisements = () => {
     fetchAdvertisements();
   }, []);
 
-  // ✅ Handle delete button click
+  // Handle delete button click
   const handleDelete = (id) => {
     setDeleteModel(true);
     setDeleteBrandsId(id);
   };
 
-  // ✅ Delete Advertisement
+  // Delete Advertisement
   const deleteBrands = async () => {
     try {
       if (!deleteBrandsId) return;
@@ -59,7 +59,7 @@ const AllAdvertisements = () => {
     }
   };
 
-  // ✅ Filtered data
+  // Filtered data
   const filteredAds = advertisements.filter((item) =>
     item.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );

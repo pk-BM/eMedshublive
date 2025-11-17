@@ -32,7 +32,6 @@ const DrugClasses = () => {
           toast.error("Invalid data received from server");
         }
       } catch (error) {
-        toast.error("Error fetching brands");
         console.error("Error fetching brands:", error);
       } finally {
         setLoading(false);
