@@ -11,7 +11,7 @@ const GetAllLeaders = () => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8; // ✅ Show 4 per row (4x2 grid per page)
+  const itemsPerPage = 8;
 
   const fetchLeaders = async () => {
     try {
@@ -20,7 +20,6 @@ const GetAllLeaders = () => {
       setLeaders(response?.data || []);
     } catch (error) {
       console.error("Error fetching leaders:", error);
-      toast.error("Failed to fetch leaders");
     } finally {
       setLoading(false);
     }
@@ -35,10 +34,13 @@ const GetAllLeaders = () => {
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  const currentItems = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   return (
-// <div className="min-h-screen bg-gradient-to-b from-[#ecfdf5] via-white to-[#f9fafb] px-6 py-12 font-inter">
+    // <div className="min-h-screen bg-gradient-to-b from-[#ecfdf5] via-white to-[#f9fafb] px-6 py-12 font-inter">
     <div className="min-h-screen px-6 py-12 font-inter">
       {/* Header Section */}
       <motion.div
@@ -105,7 +107,9 @@ const GetAllLeaders = () => {
                     <h3 className="text-lg font-semibold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
                       {leader.name}
                     </h3>
-                    <p className="text-sm text-gray-600">{leader.designation}</p>
+                    <p className="text-sm text-gray-600">
+                      {leader.designation}
+                    </p>
                   </div>
                 </Link>
               </motion.div>
