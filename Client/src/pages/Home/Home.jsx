@@ -1,5 +1,3 @@
-
-
 import CarouselMeds from "../../components/Home/CarouselMeds";
 import { Heading } from "../../components/Heading/Heading";
 
@@ -11,9 +9,7 @@ import DoctorCarousel from "../../components/Home/DoctorCarousel/DoctorCarousel"
 import SearchBar from "../../components/Search/Searchbar";
 
 const Home = () => {
-
-
-  return (  
+  return (
     <div className="w-full min-h-screen">
       {/* Hero Section */}
       <div className="relative w-full min-h-[30rem] border-y-4 border-tertiary flex flex-col items-center justify-center overflow-hidden">
@@ -25,7 +21,9 @@ const Home = () => {
         <div className="absolute inset-0 bg-black/40"></div>
 
         {/* Search Section */}
-        <SearchBar />
+        <div className="w-full px-2 sm:px-0">
+          <SearchBar />
+        </div>
       </div>
 
       {/* Other Sections */}
@@ -54,10 +52,8 @@ const Home = () => {
         text="Effective leadership is characterized by vision, integrity, and the ability to empower others"
       />
       {/* <div className="min-h-screen flex items-center justify-center"> */}
-        <DoctorCarousel />
+      <DoctorCarousel />
       {/* </div> */}
-
-
     </div>
   );
 };
