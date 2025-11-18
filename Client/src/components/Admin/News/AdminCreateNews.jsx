@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
+import React, { useState } from "react";
 import { CreateNews } from "../../../lib/APIs/newsAPI";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -12,40 +10,16 @@ const AdminCreateNews = () => {
     publishDate: "",
     unpublishDate: "",
     image: null,
-  }); 
-
-  const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
-  const [preview, setPreview] = useState(null);
-
-  const { quill, quillRef } = useQuill({
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        ["clean"],
-      ],
-    },
-    placeholder: "Write your news content here...",
-    theme: "snow",
   });
 
-  useEffect(() => {
-    if (quill) {
-      quill.on("text-change", () => {
-        setFormData((prev) => ({
-          ...prev,
-          description: quill.root.innerHTML,
-        }));
-      });
-    }
-  }, [quill]);
+  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
+
     if (type === "file") {
       const file = files[0];
       setFormData((prev) => ({ ...prev, image: file }));
@@ -60,15 +34,15 @@ const AdminCreateNews = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       setLoading(true);
       const response = await CreateNews(formData);
       toast.success(response.message);
-      setTimeout(() => {
-        navigate("/admin/news");
-      }, 400);
+
+      setTimeout(() => navigate("/admin/news"), 400);
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -125,11 +99,16 @@ const AdminCreateNews = () => {
             <label className="block text-black font-medium mb-2">
               Description
             </label>
-            <div
-              ref={quillRef}
-              className="bg-white border border-gray-300 rounded-lg"
-              style={{ minHeight: "200px" }}
-            />
+
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Write your news content here..."
+              rows={10}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black resize-none bg-white"
+              required
+            ></textarea>
           </div>
 
           {/* Dates */}

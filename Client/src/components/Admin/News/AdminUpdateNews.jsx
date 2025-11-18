@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
 import { GetNewsById, UpdateNews } from "../../../lib/APIs/newsAPI";
 import { toast } from "react-toastify";
 
@@ -22,21 +20,7 @@ const AdminUpdateNews = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
 
-  const { quill, quillRef } = useQuill({
-    modules: {
-      toolbar: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
-        ["clean"],
-      ],
-    },
-    placeholder: "Edit your news content here...",
-    theme: "snow",
-  });
-
-  // 🔹 Fetch existing news data
+  // 🔹 Fetch the news item
   const fetchNews = async () => {
     try {
       setFetching(true);
@@ -57,12 +41,7 @@ const AdminUpdateNews = () => {
       if (data.image) {
         setPreview(data.image);
       }
-
-      if (quill) {
-        quill.root.innerHTML = data.description || "";
-      }
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Failed to fetch news.");
     } finally {
       setFetching(false);
@@ -73,20 +52,10 @@ const AdminUpdateNews = () => {
     fetchNews();
   }, [id]);
 
-  useEffect(() => {
-    if (quill && formData.description) {
-      quill.root.innerHTML = formData.description;
-      quill.on("text-change", () => {
-        setFormData((prev) => ({
-          ...prev,
-          description: quill.root.innerHTML,
-        }));
-      });
-    }
-  }, [quill]);
-
+  // 🔹 Handle form input changes
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
+
     if (type === "file") {
       const file = files[0];
       setFormData((prev) => ({ ...prev, image: file }));
@@ -94,11 +63,12 @@ const AdminUpdateNews = () => {
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: name === "isActive" ? value === "true" : value, // Convert string to boolean
+        [name]: name === "isActive" ? value === "true" : value,
       }));
     }
   };
 
+  // 🔹 Submit update
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -106,9 +76,9 @@ const AdminUpdateNews = () => {
 
       const response = await UpdateNews(id, formData);
       toast.success(response.message || "News updated successfully!");
+
       setTimeout(() => navigate("/admin/news"), 500);
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message || "Failed to update news.");
     } finally {
       setLoading(false);
@@ -173,11 +143,15 @@ const AdminUpdateNews = () => {
             <label className="block text-black font-medium mb-2">
               Description
             </label>
-            <div
-              ref={quillRef}
-              className="bg-white border border-gray-300 rounded-lg"
-              style={{ minHeight: "200px" }}
-            />
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Edit your news content here..."
+              rows={10}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black resize-none bg-white"
+              required
+            ></textarea>
           </div>
 
           {/* Dates */}
@@ -210,7 +184,8 @@ const AdminUpdateNews = () => {
               />
             </div>
           </div>
-          {/* isActive Dropdown */}
+
+          {/* Status */}
           <div>
             <label className="block text-black font-medium mb-2">Status</label>
             <select
@@ -220,8 +195,8 @@ const AdminUpdateNews = () => {
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black bg-white"
               required
             >
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
+              <option value={true}>Active</option>
+              <option value={false}>Inactive</option>
             </select>
           </div>
 
