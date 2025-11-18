@@ -1,51 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { GetGenericById, UpdateGeneric } from "../../../lib/APIs/genericAPI";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 
-const RichTextEditor = React.memo(({ field, label, value, onChange }) => {
-  const { quill, quillRef } = useQuill();
-
-  const memoizedOnChange = useCallback(
-    (content) => {
-      onChange(field, content);
-    },
-    [field, onChange]
-  );
-
-  useEffect(() => {
-    if (quill) {
-      const currentContent = quill.root.innerHTML.trim();
-
-      if (
-        value !== currentContent &&
-        value !== "<p><br></p>" &&
-        typeof value === "string"
-      ) {
-        quill.clipboard.dangerouslyPasteHTML(value || "");
-      }
-
-      const handleTextChange = () => {
-        memoizedOnChange(quill.root.innerHTML);
-      };
-
-      quill.on("text-change", handleTextChange);
-
-      return () => {
-        quill.off("text-change", handleTextChange);
-      };
-    }
-  }, [quill, memoizedOnChange]);
-
+// ----------- TEXTAREA COMPONENT (instead of Quill) -----------
+const TextAreaField = React.memo(({ field, label, value, onChange }) => {
   return (
     <div className="mb-6">
       <label className="block mb-2 text-gray-700 font-medium">{label}</label>
-      <div ref={quillRef} className="border bg-white h-64" />
+      <textarea
+        name={field}
+        value={value}
+        onChange={(e) => onChange(field, e.target.value)}
+        rows={6}
+        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black bg-white"
+      />
     </div>
   );
 });
+// ----------------------------------------------------------------
 
 const AdminUpdateGenerics = () => {
   const { id } = useParams();
@@ -115,7 +88,7 @@ const AdminUpdateGenerics = () => {
     }
   };
 
-  const handleRichTextChange = useCallback((field, value) => {
+  const handleTextAreaChange = useCallback((field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
@@ -170,12 +143,12 @@ const AdminUpdateGenerics = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter generic name"
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
               required
             />
           </div>
 
+          {/* File & Image */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-black font-medium mb-2">
@@ -188,12 +161,6 @@ const AdminUpdateGenerics = () => {
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
               />
-
-              {formData.file instanceof File && (
-                <div className="mt-2 text-sm text-green-600 font-semibold">
-                  New file selected: {formData.file.name} (Ready to upload)
-                </div>
-              )}
             </div>
 
             <div>
@@ -208,24 +175,19 @@ const AdminUpdateGenerics = () => {
                 className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
               />
 
-              {/* Image Preview */}
               {previewImage && (
                 <div className="mt-4">
-                  <div className="mt-2 mb-2 text-sm text-gray-700">
-                    {previewImage === formData.image
-                      ? "Current Image Preview"
-                      : "New Image Preview"}
-                  </div>
                   <img
                     src={previewImage}
-                    alt="Structure Preview"
-                    className="w-full max-h-48 object-contain rounded-lg border border-gray-300"
+                    alt="Preview"
+                    className="w-full max-h-48 object-contain rounded-lg border"
                   />
                 </div>
               )}
             </div>
           </div>
 
+          {/* Allopathic / Herbal */}
           <div>
             <label className="block text-black font-medium mb-2">
               Allopathic or Herbal
@@ -251,72 +213,72 @@ const AdminUpdateGenerics = () => {
             <input
               type="text"
               name="therapeuticClass"
-              value={formData.therapeuticClass || ""}
+              value={formData.therapeuticClass}
               onChange={handleChange}
-              placeholder="Enter therapeutic class"
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
             />
           </div>
 
-          <RichTextEditor
+          {/* Text Areas */}
+          <TextAreaField
             field="indication"
             label="Indication"
             value={formData.indication}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="composition"
             label="Composition"
             value={formData.composition}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="pharmacology"
             label="Pharmacology"
             value={formData.pharmacology}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="dosageAndAdministration"
             label="Dosage and Administration"
             value={formData.dosageAndAdministration}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="interaction"
             label="Interaction"
             value={formData.interaction}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="contraindication"
             label="Contraindication"
             value={formData.contraindication}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="sideEffect"
             label="Side Effect"
             value={formData.sideEffect}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="pregnancyAndLactation"
             label="Pregnancy and Lactation"
             value={formData.pregnancyAndLactation}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="overdoseEffect"
             label="Overdose Effect"
             value={formData.overdoseEffect}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="storageCondition"
             label="Storage Condition"
             value={formData.storageCondition}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
 
           {/* Active Toggle */}
@@ -337,7 +299,7 @@ const AdminUpdateGenerics = () => {
           <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
+              className="bg-bg text-white py-2 px-6 rounded-lg"
               disabled={loading || dataLoading}
             >
               {loading ? "Updating..." : "Update Generic"}

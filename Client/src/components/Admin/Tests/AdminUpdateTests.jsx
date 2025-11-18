@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
 import { UpdateTest, GetTestById } from "../../../lib/APIs/testAPI";
 import { TrustedCenterOptions } from "../../../lib/APIs/TrustedCenterAPI";
 
 const AdminUpdateTest = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { quill, quillRef } = useQuill();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,22 +19,11 @@ const AdminUpdateTest = () => {
   const [loading, setLoading] = useState(false);
   const [fetchingOptions, setFetchingOptions] = useState(false);
   const [trustedCenterOptions, setTrustedCenterOptions] = useState([]);
+  const [search, setSearch] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // ✅ Sync Quill content with formData
-  useEffect(() => {
-    if (quill) {
-      quill.on("text-change", () => {
-        setFormData((prev) => ({
-          ...prev,
-          description: quill.root.innerHTML,
-        }));
-      });
-    }
-  }, [quill]);
-
-  // ✅ Fetch trusted centers (dropdown)
+  // Fetch Trusted Centers
   const fetchTrustedCenters = async () => {
     try {
       setFetchingOptions(true);
@@ -53,29 +39,22 @@ const AdminUpdateTest = () => {
     }
   };
 
-  // ✅ Fetch test details for editing
+  // Fetch Test details
   useEffect(() => {
-    const fetchMedicalTest = async () => {
+    const fetchTest = async () => {
       try {
         setLoading(true);
         const res = await GetTestById(id);
-        const data = res.data || res; // handle both structures
+        const data = res.data || res;
 
         setFormData({
           name: data.name || "",
           description: data.description || "",
           image: null,
-          trustedCenters: data.trustedCenters?.map((tc) => tc._id) || [],
+          trustedCenters: data.trustedCenters?.map((tc) => tc) || [],
         });
 
         setPreview(data.imageURL || null);
-
-        // ✅ Wait until Quill is initialized before setting HTML
-        if (quill) {
-          setTimeout(() => {
-            quill.root.innerHTML = data.description || "";
-          }, 300);
-        }
       } catch (err) {
         console.error(err);
         setErrorMessage("Failed to load medical test details.");
@@ -84,11 +63,11 @@ const AdminUpdateTest = () => {
       }
     };
 
-    fetchMedicalTest();
+    fetchTest();
     fetchTrustedCenters();
-  }, [id, quill]);
+  }, [id]);
 
-  // ✅ Handle input changes
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -96,15 +75,29 @@ const AdminUpdateTest = () => {
       const file = files[0];
       setFormData((prev) => ({ ...prev, image: file }));
       setPreview(URL.createObjectURL(file));
-    } else if (name === "trustedCenters") {
-      const selected = Array.from(e.target.selectedOptions, (opt) => opt.value);
-      setFormData((prev) => ({ ...prev, trustedCenters: selected }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  // ✅ Submit form (multipart/form-data)
+  // Toggle center selection
+  const toggleCenter = (id) => {
+    setFormData((prev) => {
+      const already = prev.trustedCenters.includes(id);
+      return {
+        ...prev,
+        trustedCenters: already
+          ? prev.trustedCenters.filter((x) => x !== id)
+          : [...prev.trustedCenters, id],
+      };
+    });
+  };
+
+  const filteredCenters = trustedCenterOptions.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -124,7 +117,6 @@ const AdminUpdateTest = () => {
         response.message || "Medical Test updated successfully!"
       );
       toast.success(response.message || "Medical Test updated successfully!");
-
       setTimeout(() => navigate("/admin/medical-test"), 600);
     } catch (error) {
       console.error(error);
@@ -134,17 +126,6 @@ const AdminUpdateTest = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  // ✅ Render dropdown options
-  const renderOptions = (data, label) => {
-    if (fetchingOptions) return <option>Loading {label}...</option>;
-    if (!data.length) return <option>No {label} available</option>;
-    return data.map((item) => (
-      <option key={item._id} value={item._id}>
-        {item.name}
-      </option>
-    ));
   };
 
   return (
@@ -169,14 +150,20 @@ const AdminUpdateTest = () => {
             />
           </div>
 
-          {/* Description (Quill) */}
+          {/* Description */}
           <div>
             <label className="block text-black font-medium mb-2">
               Description
             </label>
-            <div className="border border-gray-300 rounded-lg">
-              <div ref={quillRef} className="h-40 text-black" />
-            </div>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={6}
+              placeholder="Enter description..."
+              className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none resize-y"
+              required
+            />
           </div>
 
           {/* Trusted Centers */}
@@ -184,21 +171,40 @@ const AdminUpdateTest = () => {
             <label className="block text-black font-medium mb-2">
               Trusted Centers
             </label>
-            <select
-              name="trustedCenters"
-              multiple
-              value={formData.trustedCenters}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-            >
-              {renderOptions(trustedCenterOptions, "Trusted Centers")}
-            </select>
-            <p className="text-gray-500 text-sm mt-1">
-              Hold <b>Ctrl</b> (or <b>Cmd</b> on Mac) to select multiple.
+            <input
+              type="text"
+              placeholder="Search center..."
+              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
+              {fetchingOptions ? (
+                <p className="text-gray-500">Loading centers...</p>
+              ) : filteredCenters.length === 0 ? (
+                <p className="text-gray-500 text-sm">No centers found</p>
+              ) : (
+                filteredCenters.map((center) => (
+                  <label
+                    key={center._id}
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={formData.trustedCenters.includes(center._id)}
+                      onChange={() => toggleCenter(center._id)}
+                    />
+                    <span className="text-black">{center.name}</span>
+                  </label>
+                ))
+              )}
+            </div>
+            <p className="text-gray-600 text-sm mt-2">
+              Selected: {formData.trustedCenters.length}
             </p>
           </div>
 
-          {/* Image Upload */}
+          {/* Image */}
           <div>
             <label className="block text-black font-medium mb-2">
               Test Image

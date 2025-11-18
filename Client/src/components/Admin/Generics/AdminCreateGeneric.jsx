@@ -1,56 +1,13 @@
-import React, { useState, useCallback } from "react";
-import { useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { CreateGeneric } from "../../../lib/APIs/genericAPI"; // adjust path if needed
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
+import { CreateGeneric } from "../../../lib/APIs/genericAPI";
 import { toast } from "react-toastify";
-
-const RichTextEditor = React.memo(({ field, label, value, onChange }) => {
-  const { quill, quillRef } = useQuill();
-
-  const memoizedOnChange = useCallback(
-    (content) => {
-      onChange(field, content);
-    },
-    [field, onChange]
-  );
-
-  useEffect(() => {
-    if (quill) {
-      const currentContent = quill.root.innerHTML.trim();
-
-      if (value !== currentContent && value !== "<p><br></p>") {
-        quill.clipboard.dangerouslyPasteHTML(value || "");
-      }
-
-      const handleTextChange = () => {
-        memoizedOnChange(quill.root.innerHTML);
-      };
-
-      // Listener lagao
-      quill.on("text-change", handleTextChange);
-
-      // 3. Cleanup:
-      return () => {
-        quill.off("text-change", handleTextChange);
-      };
-    }
-  }, [quill, memoizedOnChange]);
-
-  return (
-    <div className="mb-6">
-      <label className="block mb-2 text-gray-700 font-medium">{label}</label>
-      <div ref={quillRef} className="border bg-white h-64" />
-    </div>
-  );
-});
 
 const AdminCreateGeneric = () => {
   const [formData, setFormData] = useState({
     name: "",
-    file: null, // PDF file
-    image: null, // image file
+    file: null,
+    image: null,
     allopathicOrHerbal: "",
     indication: "",
     composition: "",
@@ -67,18 +24,13 @@ const AdminCreateGeneric = () => {
 
   const [previewImage, setPreviewImage] = useState(null);
   const [pdfName, setPdfName] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleRichTextChange = useCallback((field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  }, []);
-
   const handleChange = (e) => {
-    const { name, value, type, files, checked } = e.target;
+    const { name, value, type, files } = e.target;
+
     if (type === "file") {
       const file = files[0];
       setFormData((prev) => ({ ...prev, [name]: file }));
@@ -86,7 +38,6 @@ const AdminCreateGeneric = () => {
       if (name === "image" && file) {
         setPreviewImage(URL.createObjectURL(file));
       }
-
       if (name === "file" && file) {
         setPdfName(file.name);
       }
@@ -103,12 +54,25 @@ const AdminCreateGeneric = () => {
       toast.success(response.message);
       setTimeout(() => navigate("/admin/generic"), 400);
     } catch (error) {
-      console.error(error);
       toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
   };
+
+  // Reusable textarea component
+  const RenderTextarea = ({ name, label }) => (
+    <div>
+      <label className="block text-black font-medium mb-2">{label}</label>
+      <textarea
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        rows={6}
+        className="w-full border border-gray-300 rounded-lg p-3 text-black bg-white"
+      ></textarea>
+    </div>
+  );
 
   return (
     <div className="w-full min-h-screen flex justify-center bg-gray-100">
@@ -127,30 +91,31 @@ const AdminCreateGeneric = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter generic name"
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              className="w-full border border-gray-300 rounded-lg p-3 text-black"
               required
             />
           </div>
 
-          {/* Innovator Monograph (PDF) */}
+          {/* PDF + Image */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* PDF */}
             <div>
               <label className="block text-black font-medium mb-2">
-                Innovator Monograph
+                Innovator Monograph (PDF)
               </label>
               <input
                 type="file"
                 accept="application/*"
                 name="file"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+                className="w-full border border-gray-300 rounded-lg p-3"
               />
               {pdfName && (
-                <div className="mt-2 text-sm text-gray-700">{pdfName}</div>
+                <div className="text-sm mt-2 text-gray-700">{pdfName}</div>
               )}
             </div>
 
-            {/*Structure Image */}
+            {/* Image */}
             <div>
               <label className="block text-black font-medium mb-2">
                 Structure Image
@@ -160,41 +125,38 @@ const AdminCreateGeneric = () => {
                 accept="image/*"
                 name="image"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+                required
+                className="w-full border border-gray-300 rounded-lg p-3"
               />
               {previewImage && (
                 <div className="mt-4">
                   <img
                     src={previewImage}
-                    alt="Structure Preview"
-                    className="w-full max-h-48 object-contain rounded-lg border border-gray-300"
+                    alt="Preview"
+                    className="w-full max-h-48 object-contain border rounded-lg"
                   />
                 </div>
               )}
             </div>
           </div>
 
-          {/* allophaticOrHerbal */}
-
+          {/* Select */}
           <div>
             <label className="block text-black font-medium mb-2">
               Allopathic or Herbal
             </label>
             <select
+              required
               name="allopathicOrHerbal"
               value={formData.allopathicOrHerbal}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              required
+              className="w-full border border-gray-300 rounded-lg p-3 text-black"
             >
               <option value="">Select Type</option>
               <option value="Allopathic">Allopathic</option>
-              <option value="Herbal"
-              >Herbal</option>
+              <option value="Herbal">Herbal</option>
             </select>
           </div>
-
-
 
           {/* Therapeutic Class */}
           <div>
@@ -207,96 +169,33 @@ const AdminCreateGeneric = () => {
               value={formData.therapeuticClass}
               onChange={handleChange}
               placeholder="Enter therapeutic class"
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              className="w-full border border-gray-300 rounded-lg p-3 text-black"
             />
           </div>
 
-          {/* Rich Text Fields (Ab 'handleRichTextChange' use kiya hai) */}
-          {/* Indication */}
-          <RichTextEditor
-            field="indication"
-            label="Indication" // Label capitalize kiya
-            value={formData.indication}
-            onChange={handleRichTextChange} // Memoized handler
+          {/* TEXTAREAS (REPLACED QUILL) */}
+          <RenderTextarea name="indication" label="Indication" />
+          <RenderTextarea name="composition" label="Composition" />
+          <RenderTextarea name="pharmacology" label="Pharmacology" />
+          <RenderTextarea
+            name="dosageAndAdministration"
+            label="Dosage and Administration"
           />
-
-          {/* Composition */}
-          <RichTextEditor
-            field="composition" // Field name small letter
-            label="Composition" // Label capitalize kiya
-            value={formData.composition}
-            onChange={handleRichTextChange}
+          <RenderTextarea name="interaction" label="Interaction" />
+          <RenderTextarea name="contraindication" label="Contraindication" />
+          <RenderTextarea name="sideEffect" label="Side Effect" />
+          <RenderTextarea
+            name="pregnancyAndLactation"
+            label="Pregnancy and Lactation"
           />
-
-          {/* Pharmacology */}
-          <RichTextEditor
-            field="pharmacology"
-            label="Pharmacology"
-            value={formData.pharmacology}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Dosage and Administration */}
-          <RichTextEditor
-            field="dosageAndAdministration"
-            label="Dosage and Administration" // Label thik kiya
-            value={formData.dosageAndAdministration}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Interaction */}
-          <RichTextEditor
-            field="interaction"
-            label="Interaction"
-            value={formData.interaction}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Contraindication */}
-          <RichTextEditor
-            field="contraindication"
-            label="Contraindication"
-            value={formData.contraindication}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Side Effects */}
-          <RichTextEditor
-            field="sideEffect"
-            label="Side Effect" // Label thik kiya
-            value={formData.sideEffect}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Pregnancy & Lactation */}
-          <RichTextEditor
-            field="pregnancyAndLactation"
-            label="Pregnancy and Lactation" // Label thik kiya
-            value={formData.pregnancyAndLactation}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Overdose Effect */}
-          <RichTextEditor
-            field="overdoseEffect"
-            label="Overdose Effect" // Label thik kiya
-            value={formData.overdoseEffect}
-            onChange={handleRichTextChange}
-          />
-
-          {/* Storage Condition */}
-          <RichTextEditor
-            field="storageCondition"
-            label="Storage Condition" // Label thik kiya
-            value={formData.storageCondition}
-            onChange={handleRichTextChange}
-          />
+          <RenderTextarea name="overdoseEffect" label="Overdose Effect" />
+          <RenderTextarea name="storageCondition" label="Storage Condition" />
 
           {/* Submit */}
           <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
+              className="bg-bg text-white py-2 px-6 rounded-lg"
               disabled={loading}
             >
               {loading ? "Creating..." : "Create Generic"}
