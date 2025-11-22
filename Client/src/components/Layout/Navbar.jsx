@@ -15,15 +15,15 @@ const Navbar = () => {
     MORE: [
       { title: "News", link: "/news" },
       { title: "Doctors Advice", link: "/doctor-advice" },
-      { title: "Medical Test", link: "/tests" },
+      // { title: "Medical Test", link: "/tests" },
     ],
     MEDICINE: [
-      { title: "Generics (Allopathic)", link: "/generics-allophathic" },
-      { title: "Generics (Herbal)", link: "/generics-herbal" },
+      { title: "Allopathic", link: "/generics-allophathic" },
+      { title: "Herbal", link: "/generics-herbal" },
     ],
-    BRANDS: [
-      { title: "Brands (Allopathic)", link: "/brands-allophathic" },
-      { title: "Brands (Herbal)", link: "/brands-herbal" },
+    BRAND: [
+      { title: "Allopathic", link: "/brands-allophathic" },
+      { title: "Herbal", link: "/brands-herbal" },
     ],
   };
   const toggleMobileSideMenu = () => {
@@ -79,7 +79,7 @@ const Navbar = () => {
                 </div>
 
                 <ul className="space-y-4">
-                  <li className="font-medium">GENERICS</li>
+                  <li className="font-medium">GENERIC</li>
                   <ul className="pl-3 space-y-2">
                     {dropdownItems.MEDICINE.map((item, idx) => (
                       <li
@@ -106,9 +106,9 @@ const Navbar = () => {
                     <li className="font-medium">PHARMACEUTICALS</li>
                   </Link>
 
-                  <li className="font-medium">BRANDS</li>
+                  <li className="font-medium">BRAND</li>
                   <ul className="pl-3 space-y-2">
-                    {dropdownItems.BRANDS.map((item, idx) => (
+                    {dropdownItems.BRAND.map((item, idx) => (
                       <li
                         key={idx}
                         className="text-sm text-gray-600 cursor-pointer"
@@ -142,7 +142,7 @@ const Navbar = () => {
                     ))}
                   </ul>
 
-                  <li className="font-medium">CONTACT</li>
+                  {/* <li className="font-medium">CONTACT</li> */}
                 </ul>
               </motion.div>
             </>
@@ -150,7 +150,47 @@ const Navbar = () => {
         </AnimatePresence>
 
         {/* ===== Desktop Menu ===== */}
-        <ul className="hidden md:flex items-center gap-2 relative z-[2000]">
+        <ul className="hidden md:flex items-center relative z-[2000]">
+          <Link
+            to="/"
+            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+          >
+            Home
+          </Link>
+          {/* Brands with dropdown */}
+          <li
+            className="relative group cursor-pointer"
+            onMouseEnter={() => setOpenDropdown("BRAND")}
+            onMouseLeave={() => setOpenDropdown(null)}
+          >
+            <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
+              <span>Brand</span>
+              <IoIosArrowDown size={16} />
+            </p>
+            <AnimatePresence>
+              {openDropdown === "BRAND" && (
+                <motion.ul
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
+                >
+                  {dropdownItems.BRAND.map((item, idx) => (
+                    <motion.li
+                      key={idx}
+                      whileHover={{ x: 8, color: "#0d9488" }}
+                      transition={{ type: "tween", duration: 0.2 }}
+                      className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
+                    >
+                      <Link to={item.link}>{item.title}</Link>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </li>
+
           {/* MEDICINE with dropdown */}
           <li
             className="relative group cursor-pointer"
@@ -158,7 +198,7 @@ const Navbar = () => {
             onMouseLeave={() => setOpenDropdown(null)}
           >
             <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
-              <span>GENERICS</span>
+              <span>Generic</span>
               <IoIosArrowDown size={16} />
             </p>
             <AnimatePresence>
@@ -185,47 +225,32 @@ const Navbar = () => {
             </AnimatePresence>
           </li>
 
+          <Link
+            to="/new-product"
+            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+          >
+            New Product
+          </Link>
+          <Link
+            to="/bioequivalent-drugs"
+            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+          >
+            Bioequivalent Drug
+          </Link>
+
           {/* INDICATIONS */}
           <Link
             to="/pharmaceuticals"
             className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
           >
-            PHARMACEUTICALS
+            Pharmaceuticals
           </Link>
-
-          {/* Brands with dropdown */}
-          <li
-            className="relative group cursor-pointer"
-            onMouseEnter={() => setOpenDropdown("BRANDS")}
-            onMouseLeave={() => setOpenDropdown(null)}
+          <Link
+            to="/tests"
+            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
           >
-            <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
-              <span>BRANDS</span>
-              <IoIosArrowDown size={16} />
-            </p>
-            <AnimatePresence>
-              {openDropdown === "BRANDS" && (
-                <motion.ul
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
-                >
-                  {dropdownItems.BRANDS.map((item, idx) => (
-                    <motion.li
-                      key={idx}
-                      whileHover={{ x: 8, color: "#0d9488" }}
-                      transition={{ type: "tween", duration: 0.2 }}
-                      className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
-                    >
-                      <Link to={item.link}>{item.title}</Link>
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </li>
+            Medicle Test
+          </Link>
 
           {/* MORE with dropdown */}
           <li
@@ -234,7 +259,7 @@ const Navbar = () => {
             onMouseLeave={() => setOpenDropdown(null)}
           >
             <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
-              <span>MORE</span>
+              <span>More</span>
               <IoIosArrowDown size={16} />
             </p>
 
@@ -261,14 +286,6 @@ const Navbar = () => {
               )}
             </AnimatePresence>
           </li>
-
-          {/* CONTACT */}
-          <Link
-            to="#"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-150 cursor-pointer p-3 font-medium"
-          >
-            CONTACT
-          </Link>
         </ul>
       </div>
       {/* Search Section */}

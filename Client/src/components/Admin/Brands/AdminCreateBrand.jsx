@@ -20,6 +20,8 @@ const AdminCreateBrand = () => {
     totalPrice: "",
     packImage: null,
     allopathicOrHerbal: "",
+    newProduct: "",
+    bioequivalentDrug: "",
   });
 
   const [preview, setPreview] = useState(null);
@@ -165,27 +167,60 @@ const AdminCreateBrand = () => {
               >
                 <option value="">Select Type</option>
                 <option value="Allopathic">Allopathic</option>
-                <option value="Herbal">Herbal</option>  
+                <option value="Herbal">Herbal</option>
               </select>
             </div>
+          </div>
+          <div className="w-full">
+            <label className="block text-black font-medium mb-2">
+              Manufacturer
+            </label>
+            <select
+              name="manufacturer"
+              value={formData.manufacturer}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              required
+            >
+              <option value="">Select Manufacturer</option>
+              {renderOptions(manufacturerOptions, "Manufacturers")}
+            </select>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-black font-medium mb-2">
-                Manufacturer
+                New Product
               </label>
               <select
-                name="manufacturer"
-                value={formData.manufacturer}
+                name="newProduct"
+                value={formData.newProduct}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
                 required
               >
-                <option value="">Select Manufacturer</option>
-                {renderOptions(manufacturerOptions, "Manufacturers")}
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-black font-medium mb-2">
+                Bioequivalent Drug
+              </label>
+              <select
+                name="bioequivalentDrug"
+                value={formData.bioequivalentDrug}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              >
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
               </select>
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-black font-medium mb-2">

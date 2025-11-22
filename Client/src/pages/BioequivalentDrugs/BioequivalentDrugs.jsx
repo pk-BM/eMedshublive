@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import BrandCard from "../../components/Drugs/BrandCard";
-import { GetAllopathicBrands } from "../../lib/APIs/brandsAPI";
+import { GetAllBrands } from "../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
 import { MdOutlineMedicalServices } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 
-const DrugClasses = () => {
+const BioequivalentDrugs = () => {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -14,7 +14,7 @@ const DrugClasses = () => {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await GetAllopathicBrands();
+        const response = await GetAllBrands();
         if (response?.success && Array.isArray(response.data)) {
           setBrands(response.data);
         } else {
@@ -35,7 +35,7 @@ const DrugClasses = () => {
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b-2 border-[#34d399] pb-5 mb-10">
         <h2 className="text-2xl font-semibold text-slate-800 flex items-center gap-2">
           <MdOutlineMedicalServices className="text-[#34d399] text-3xl" />
-          <span className="tracking-wide">Brands</span>
+          <span className="tracking-wide">Bioequivalent Drugs</span>
         </h2>
 
         {/* Search Bar */}
@@ -54,29 +54,35 @@ const DrugClasses = () => {
 
       {/* MAIN CONTENT */}
       {loading ? (
-        <p className="text-[#6b7280] text-center">Loading brands...</p>
+        <p className="text-[#6b7280] text-center">
+          Loading Bioequivalent Drugs...
+        </p>
       ) : brands.length === 0 ? (
-        <p className="text-[#6b7280] text-center">No products found.</p>
+        <p className="text-[#6b7280] text-center">
+          No Bioequivalent Drugs found.
+        </p>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {brands.map((brand, index) => (
-            <Link
-              key={index}
-              to={`/brands/${brand._id}`}
-              className="cursor-pointer hover:scale-[1.02] transition-transform"
-            >
-              <BrandCard
-                packImage={brand.packImage}
-                productType={brand.productType || "N/A"}
-                name={brand.name || "Unnamed"}
-                generic={brand.generic?.name || "N/A"}
-              />
-            </Link>
-          ))}
+          {brands
+            ?.filter((item) => item.bioequivalentDrug === "yes")
+            .map((brand, index) => (
+              <Link
+                key={index}
+                to={`/brands/${brand._id}`}
+                className="cursor-pointer hover:scale-[1.02] transition-transform"
+              >
+                <BrandCard
+                  packImage={brand.packImage}
+                  productType={brand.productType || "N/A"}
+                  name={brand.name || "Unnamed"}
+                  generic={brand.generic?.name || "N/A"}
+                />
+              </Link>
+            ))}
         </div>
       )}
     </div>
   );
 };
 
-export default DrugClasses;
+export default BioequivalentDrugs;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LimitedBanners } from "../../lib/APIs/bannerAPI";
+import { Link } from "react-router";
 
 const CarouselMeds = () => {
   const [images, setImages] = useState([]);
@@ -16,16 +17,16 @@ const CarouselMeds = () => {
       const res = await LimitedBanners();
       const banners = res.data || [];
 
-      // Horizontal
-      const bannerImages = banners.horizontalBanners.map((b) => b.bannerImgUrl);
-      setImages(pickRandom(bannerImages, bannerImages.length));
+      // Horizontal — keep full objects (bannerImgUrl + link)
+      const horizontal = banners.horizontalBanners;
+      setImages(pickRandom(horizontal, horizontal.length));
 
-      // Vertical — full pool
-      const verticalImages = banners.verticalBanners.map((b) => b.bannerImgUrl);
-      setVerticalPool(verticalImages);
+      // Vertical — store full objects too (not just URL)
+      const vertical = banners.verticalBanners;
+      setVerticalPool(vertical);
 
-      // Initial random 4 vertical images
-      const random4 = pickRandom(verticalImages, 4);
+      // Pick 4 unique vertical banner objects
+      const random4 = pickRandom(vertical, 4);
       setVerticalLeft(random4.slice(0, 2));
       setVerticalRight(random4.slice(2, 4));
     } catch (error) {
@@ -37,13 +38,13 @@ const CarouselMeds = () => {
     fetchBanners();
   }, []);
 
-  // Auto shuffle horizontal + vertical every 3 sec
+  // Shuffle every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      // Shuffle horizontal
+      // Shuffle Horizontal
       setImages((prev) => shuffle(prev));
 
-      // Shuffle vertical — 4 unique at a time
+      // Shuffle vertical only if enough items
       if (verticalPool.length >= 4) {
         const random4 = pickRandom(verticalPool, 4);
         setVerticalLeft(random4.slice(0, 2));
@@ -58,38 +59,55 @@ const CarouselMeds = () => {
     <div className="w-full px-4 py-10 bg-gray-50 flex items-start gap-4">
       {/* LEFT Vertical */}
       <div className="hidden md:flex flex-col items-start gap-4">
-        {verticalLeft.map((src, idx) => (
-          <img
-            key={"L" + idx}
-            src={src}
-            alt=""
-            className="w-45 h-90 object-cover rounded-md shadow-2xl"
-          />
+        {verticalLeft.map((item, idx) => (
+          <Link
+            to={item.link}
+            target="_blank"
+            key={"VL" + idx}
+            className="cursor-pointer"
+          >
+            <img
+              src={item.bannerImgUrl}
+              alt=""
+              className="w-45 h-90 object-cover rounded-md shadow-2xl"
+            />
+          </Link>
         ))}
       </div>
 
-      {/* Horizontal Banners */}
+      {/* Horizontal */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mx-auto">
         {images.map((img, idx) => (
-          <div key={img + idx} className="relative overflow-hidden">
+          <Link
+            to={img.link}
+            target="_blank"
+            key={"H" + idx}
+            className="relative overflow-hidden"
+          >
             <img
-              src={img}
+              src={img.bannerImgUrl}
               alt={`Banner ${idx}`}
               className="w-full h-40 object-cover rounded-md shadow-2xl border border-gray-200"
             />
-          </div>
+          </Link>
         ))}
       </div>
 
       {/* RIGHT Vertical */}
       <div className="hidden md:flex flex-col items-start gap-4">
-        {verticalRight.map((src, idx) => (
-          <img
-            key={"R" + idx}
-            src={src}
-            alt=""
-            className="w-45 h-90 object-cover rounded-md shadow-2xl"
-          />
+        {verticalRight.map((item, idx) => (
+          <Link
+            to={item.link}
+            target="_blank"
+            key={"VR" + idx}
+            className="cursor-pointer"
+          >
+            <img
+              src={item.bannerImgUrl}
+              alt=""
+              className="w-45 h-90 object-cover rounded-md shadow-2xl"
+            />
+          </Link>
         ))}
       </div>
     </div>

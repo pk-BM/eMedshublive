@@ -7,7 +7,7 @@ import { deleteFromCloudinary } from "../utils/deleteDataFromCloudinary.js";
 // CREATE BANNER
 export const createBanner = async (req, res) => {
   try {
-    if (!req.body.position) {
+    if (!req.body.position || !req.body.link) {
       return sendResponse(res, 400, false, "All fields are required", null);
     }
     const image = req?.files?.bannerImg?.[0];
@@ -23,6 +23,7 @@ export const createBanner = async (req, res) => {
       bannerImgUrl: imageUrl,
       createdBy: req.user?._id,
       position: req.body.position,
+      link: req.body.link,
     });
 
     return sendResponse(res, 201, true, "Banner created successfully", banner);
@@ -69,12 +70,12 @@ export const getAllBanners = async (req, res) => {
 export const getLimitedBanners = async (req, res) => {
   try {
     const horizontalBanners = await Banner.find({ position: "horizontal" })
-      .select("bannerImgUrl")
+      .select("bannerImgUrl link")
       .limit(18)
       .sort({ createdAt: -1 });
 
     const verticalBanners = await Banner.find({ position: "vertical" })
-      .select("bannerImgUrl")
+      .select("bannerImgUrl link")
       .limit(18)
       .sort({ createdAt: -1 });
 
@@ -133,7 +134,7 @@ export const updateBanner = async (req, res) => {
       return sendResponse(res, 400, false, "Invalid ID", null);
     }
 
-    if (!req.body.position) {
+    if (!req.body.position || !req.body.link) {
       return sendResponse(res, 400, false, "All fields are required", null);
     }
 
@@ -153,6 +154,7 @@ export const updateBanner = async (req, res) => {
       }
     }
     existingBanner.position = req.body.position;
+    existingBanner.link = req.body.link;
     await existingBanner.save();
 
     return sendResponse(

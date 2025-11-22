@@ -29,8 +29,10 @@ const BrandDetail = () => {
       const brandData = response.data || response;
       setBrand(brandData);
     } catch (error) {
-      console.error("❌ Error fetching brand:", error);
-      toast.error(error.response?.data?.message || "Failed to fetch brand details.");
+      console.error("Error fetching brand:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to fetch brand details."
+      );
     } finally {
       setLoading(false);
     }
@@ -102,6 +104,11 @@ const BrandDetail = () => {
       value: `Rs. ${brand.totalPrice}`,
       icon: <FaMoneyBillWave className="text-teal-600 text-2xl" />,
     },
+    brand.bioequivalentDrug === "yes" && {
+      label: "Bioequivalent Drug",
+      value: `${brand.bioequivalentDrug}`,
+      icon: <FaCapsules className="text-teal-600 text-2xl" />,
+    },
   ];
 
   return (
@@ -129,7 +136,16 @@ const BrandDetail = () => {
 
       {/* Title */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-teal-700 mb-2">{brand.name}</h1>
+        <h1 className="text-3xl font-bold text-teal-700 mb-2 flex items-center justify-center gap-3">
+          {brand.name}
+
+          {brand.newProduct === "yes" && (
+            <span className="px-3 py-1 text-xs font-semibold bg-teal-600 text-white rounded-full shadow-md animate-pulse">
+              NEW PRODUCT
+            </span>
+          )}
+        </h1>
+
         <p className="text-gray-600 italic">{brand.productType}</p>
       </div>
 

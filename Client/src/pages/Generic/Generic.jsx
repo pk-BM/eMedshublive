@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { MdOutlineMedicalServices, MdLocalPharmacy, MdScience } from "react-icons/md";
+import {
+  MdOutlineMedicalServices,
+  MdLocalPharmacy,
+  MdScience,
+} from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { FaPills, FaCapsules, FaVial, FaSyringe } from "react-icons/fa";
-import { GiMedicines, GiTestTubes, GiPill, GiChemicalDrop } from "react-icons/gi";
+import {
+  GiMedicines,
+  GiTestTubes,
+  GiPill,
+  GiChemicalDrop,
+} from "react-icons/gi";
 import { RiMedicineBottleFill } from "react-icons/ri";
 import { TbTestPipe2 } from "react-icons/tb";
 import Pagination from "../../components/Layout/Pagination";
@@ -84,12 +93,18 @@ const Generic = () => {
       {/* Content */}
       {loading ? (
         <p className="text-center text-gray-600 text-sm">Loading generics...</p>
+      ) : currentItems?.length === 0 ? (
+        <p className="text-center text-gray-600 text-sm">No generics found</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {currentItems.map((generic, index) => {
             const Icon = icons[index % icons.length];
             return (
-              <Link key={index} to={`/generics/${generic._id}`} className="block">
+              <Link
+                key={index}
+                to={`/generics/${generic._id}`}
+                className="block"
+              >
                 <div className="group flex flex-col justify-center items-center bg-white border border-green-200 rounded-xl w-full h-40 transition-all duration-300 cursor-pointer hover:bg-[#34d399] hover:shadow-lg">
                   <div className="text-4xl text-[#34d399] mb-2 transition-all duration-300 group-hover:text-white">
                     {Icon}

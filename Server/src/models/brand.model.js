@@ -19,6 +19,14 @@ const brandSchema = new mongoose.Schema(
       ref: "Generic",
       required: true,
     },
+    newProduct: {
+      type: String,
+      enum: ["yes", "no"],
+    },
+    bioequivalentDrug: {
+      type: String,
+      enum: ["yes", "no"],
+    },
     manufacturer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pharmaceutical",

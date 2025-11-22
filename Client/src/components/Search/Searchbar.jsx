@@ -66,7 +66,7 @@ const SearchBar = () => {
       >
         <input
           type="text"
-          placeholder="Search by Brand or Generic Name e.g. Pcab or Vonoprazan"
+          placeholder="Search by Brand or Generic Name eg; Progut or Esomeprazole"
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);

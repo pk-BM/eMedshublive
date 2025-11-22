@@ -22,6 +22,8 @@ const AdminUpdateBrand = () => {
     totalPrice: "",
     packImage: null,
     allopathicOrHerbal: "",
+    newProduct: "",
+    bioequivalentDrug: "",
   });
 
   const [preview, setPreview] = useState(null);
@@ -72,7 +74,7 @@ const AdminUpdateBrand = () => {
         productType: brand.productType || "",
         name: brand.name || "",
         generic: brand?.generic?._id,
-        manufacturer:  brand?.manufacturer?._id,
+        manufacturer: brand?.manufacturer?._id,
         dosageForm: brand.dosageForm || "",
         strength: brand.strength || "",
         packSize: brand.packSize || "",
@@ -80,6 +82,8 @@ const AdminUpdateBrand = () => {
         totalPrice: brand.totalPrice || "",
         packImage: null,
         allopathicOrHerbal: brand.allopathicOrHerbal || "",
+        newProduct: brand.newProduct || "",
+        bioequivalentDrug: brand.bioequivalentDrug || "",
       });
 
       setPreview(brand.packImage);
@@ -202,36 +206,70 @@ const AdminUpdateBrand = () => {
 
             <div>
               <label className="block text-black font-medium mb-2">
-                Manufacturer
+                Allopathic or Herbal
               </label>
               <select
-                name="manufacturer"
-                value={formData.manufacturer}
+                name="allopathicOrHerbal"
+                value={formData.allopathicOrHerbal}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
                 required
               >
-                <option value="">Select Manufacturer</option>
-                {renderOptions(manufacturerOptions, "Manufacturers")}
+                <option value="">Select Type</option>
+                <option value="Allopathic">Allopathic</option>
+                <option value="Herbal">Herbal</option>
               </select>
             </div>
           </div>
-
-          <div>
+          <div className="w-full">
             <label className="block text-black font-medium mb-2">
-              Allopathic or Herbal
+              Manufacturer
             </label>
             <select
-              name="allopathicOrHerbal"
-              value={formData.allopathicOrHerbal}
+              name="manufacturer"
+              value={formData.manufacturer}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
               required
             >
-              <option value="">Select Type</option>
-              <option value="Allopathic">Allopathic</option>
-              <option value="Herbal">Herbal</option>
+              <option value="">Select Manufacturer</option>
+              {renderOptions(manufacturerOptions, "Manufacturers")}
             </select>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-black font-medium mb-2">
+                New Product
+              </label>
+              <select
+                name="newProduct"
+                value={formData.newProduct}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              >
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-black font-medium mb-2">
+                Bioequivalent Drug
+              </label>
+              <select
+                name="bioequivalentDrug"
+                value={formData.bioequivalentDrug}
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                required
+              >
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
           </div>
 
           {/* Optional Fields */}

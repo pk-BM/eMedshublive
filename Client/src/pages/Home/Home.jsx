@@ -22,14 +22,16 @@ const Home = () => {
       <CarouselMeds />
 
       <Heading
-        heading="Featured News"
-        text="Stay updated with the latest insights, trending stories, and expert articles curated just for you."
+        heading="Pharma Leaders"
+        text="Effective leadership is characterized by vision, integrity, and the ability to empower others"
       />
+      <DoctorCarousel />
+
       <News />
 
       <Heading
-        heading="Brands"
-        text="Explore trusted medical and pharmaceutical brands recommended by professionals."
+        heading="Product Highlight"
+        text=""
       />
       <Brands />
 
@@ -38,14 +40,6 @@ const Home = () => {
         text="Find complete details of available medical tests, procedures, and reports."
       />
       <Test />
-
-      <Heading
-        heading="Our Leaders"
-        text="Effective leadership is characterized by vision, integrity, and the ability to empower others"
-      />
-      {/* <div className="min-h-screen flex items-center justify-center"> */}
-      <DoctorCarousel />
-      {/* </div> */}
     </div>
   );
 };

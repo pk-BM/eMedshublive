@@ -11,6 +11,10 @@ const bannerSchema = new mongoose.Schema(
       enum: ["horizontal", "vertical"],
       required: true,
     },
+    link: {
+      type: String,
+      required: true,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Auth",

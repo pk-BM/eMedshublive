@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const AdminCreateBanner = () => {
   const [bannerImg, setBannerImg] = useState(null);
   const [bannerPosition, setBannerPosition] = useState("");
+  const [link, setLink] = useState("");
 
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,7 @@ const AdminCreateBanner = () => {
       const fd = new FormData();
       fd.append("bannerImg", bannerImg);
       fd.append("position", bannerPosition);
+      fd.append("link", link);
       const response = await CreateBanner(fd);
       toast.success(response?.message || "Banner created successfully!");
       setTimeout(() => navigate("/admin/banners"), 600);
@@ -75,6 +77,16 @@ const AdminCreateBanner = () => {
               <option value="horizontal">Horizontal</option>
               <option value="vertical">Vertical</option>
             </select>
+          </div>
+          <div>
+            <label className="block text-black font-medium mb-2">Link</label>
+            <input
+              type="text"
+              name="link"
+              onChange={(e) => setLink(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3 text-black"
+              required
+            />
           </div>
           <div>
             <label className="block text-black font-medium mb-2">

@@ -9,6 +9,7 @@ const AdminUpdateBanner = () => {
 
   const [bannerImg, setBannerImg] = useState(null);
   const [bannerPosition, setBannerPosition] = useState("");
+  const [link, setLink] = useState("");
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -19,6 +20,7 @@ const AdminUpdateBanner = () => {
       if (res?.data?.bannerImgUrl) {
         setPreview(res.data.bannerImgUrl);
         setBannerPosition(res.data.position);
+        setLink(res.data.link);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to fetch banner");
@@ -49,6 +51,7 @@ const AdminUpdateBanner = () => {
       const fd = new FormData();
       if (bannerImg) fd.append("bannerImg", bannerImg);
       fd.append("position", bannerPosition);
+      fd.append("link", link);
 
       const response = await UpdateBanner(id, fd);
       toast.success(response?.message || "Banner updated successfully!");
@@ -93,6 +96,18 @@ const AdminUpdateBanner = () => {
               <option value="horizontal">Horizontal</option>
               <option value="vertical">Vertical</option>
             </select>
+          </div>
+
+          <div>
+            <label className="block text-black font-medium mb-2">Link</label>
+            <input
+              type="text"
+              name="link"
+              value={link}
+              onChange={(e) => setLink(e.target.value)}
+              className="w-full border border-gray-300 rounded-lg p-3 text-black"
+              required
+            />
           </div>
           {/* Banner Image Upload */}
           <div>

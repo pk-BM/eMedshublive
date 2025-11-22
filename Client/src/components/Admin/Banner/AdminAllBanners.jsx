@@ -134,14 +134,11 @@ const AdminAllBanners = () => {
                 className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-green-700 font-semibold text-lg">
-                    {item.title || "Untitled"}
-                  </h3>
                   <span className="text-gray-500 text-sm">#{index + 1}</span>
                 </div>
-                {item.bannerImg && (
+                {item.bannerImgUrl && (
                   <img
-                    src={item.bannerImg}
+                    src={item.bannerImgUrl}
                     alt={item.title}
                     className="w-full h-36 object-cover rounded-md border mb-3"
                   />
