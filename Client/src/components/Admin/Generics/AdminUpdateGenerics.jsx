@@ -45,7 +45,6 @@ const AdminUpdateGenerics = () => {
           file: fetchedData.innovatorMonograph || null,
           image: fetchedData.structureImage || null,
           indication: fetchedData.indication || "",
-          composition: fetchedData.composition || "",
           pharmacology: fetchedData.pharmacology || "",
           dosageAndAdministration: fetchedData.dosageAndAdministration || "",
           interaction: fetchedData.interaction || "",
@@ -224,12 +223,6 @@ const AdminUpdateGenerics = () => {
             field="indication"
             label="Indication"
             value={formData.indication}
-            onChange={handleTextAreaChange}
-          />
-          <TextAreaField
-            field="composition"
-            label="Composition"
-            value={formData.composition}
             onChange={handleTextAreaChange}
           />
           <TextAreaField

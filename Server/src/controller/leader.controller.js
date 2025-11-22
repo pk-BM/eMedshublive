@@ -6,14 +6,14 @@ import { deleteFromCloudinary } from "../utils/deleteDataFromCloudinary.js";
 
 export const createLeader = async (req, res) => {
   try {
-    const { name, designation, previous, institution, department, bio } =
+    const { name, designation, pharmaLeader, institution, department, bio } =
       req.body;
 
     // Validation
     if (
       !name ||
       !designation ||
-      !previous ||
+      !pharmaLeader ||
       !institution ||
       !department ||
       !bio
@@ -35,7 +35,7 @@ export const createLeader = async (req, res) => {
     const leader = await Leader.create({
       name,
       designation,
-      previous,
+      pharmaLeader,
       institution,
       department,
       bio,
@@ -107,7 +107,7 @@ export const getLeaderById = async (req, res) => {
 export const updateLeader = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, designation, previous, institution, department, bio } =
+    const { name, designation, pharmaLeader, institution, department, bio } =
       req.body;
 
     if (!id) return sendResponse(res, 400, false, "ID required", null);
@@ -135,7 +135,7 @@ export const updateLeader = async (req, res) => {
       {
         name,
         designation,
-        previous,
+        pharmaLeader,
         institution,
         department,
         bio,

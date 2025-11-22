@@ -11,7 +11,7 @@ const AdminUpdateLeader = () => {
     profilePicture: null,
     name: "",
     designation: "",
-    previous: "",
+    pharmaLeader: "",
     institution: "",
     department: "",
     bio: "",
@@ -32,7 +32,7 @@ const AdminUpdateLeader = () => {
         profilePicture: null,
         name: data.name || "",
         designation: data.designation || "",
-        previous: data.previous || "",
+        pharmaLeader: data.pharmaLeader || "",
         institution: data.institution || "",
         department: data.department || "",
         bio: data.bio || "",
@@ -151,14 +151,14 @@ const AdminUpdateLeader = () => {
           {/* Previous */}
           <div>
             <label className="block text-black font-medium mb-2">
-              Previous
+              Pharma Leader *
             </label>
             <input
               type="text"
-              name="previous"
-              value={formData.previous}
+              name="pharmaLeader"
+              value={formData.pharmaLeader}
               onChange={handleChange}
-              placeholder="Enter previous position or organization"
+              placeholder="Enter pharma leader"
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
               required
             />

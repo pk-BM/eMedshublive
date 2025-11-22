@@ -20,9 +20,6 @@ const genericSchema = new mongoose.Schema(
     indication: {
       type: String,
     },
-    composition: {
-      type: String,
-    },
     pharmacology: {
       type: String,
     },

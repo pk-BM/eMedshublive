@@ -37,7 +37,6 @@ const GenericDetails = () => {
 
   const sections = [
     { title: "Indications", key: "indication" },
-    { title: "Composition", key: "composition" },
     { title: "Pharmacology", key: "pharmacology" },
     { title: "Dosage & Administration", key: "dosageAndAdministration" },
     { title: "Interaction", key: "interaction" },

@@ -35,7 +35,10 @@ const DoctorAdvice = () => {
 
   // ✅ Pagination logic
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  const currentItems = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 px-5 py-10  font-inter">
@@ -88,7 +91,7 @@ const DoctorAdvice = () => {
                   />
                 </div>
                 <div className="p-3 text-center">
-                  <h3 className="text-lg font-semibold text-gray-800 truncate">
+                  <h3 className="text-lg font-semibold text-gray-800">
                     {advice.title}
                   </h3>
                 </div>

@@ -10,7 +10,6 @@ const AdminCreateGeneric = () => {
     image: null,
     allopathicOrHerbal: "",
     indication: "",
-    composition: "",
     pharmacology: "",
     dosageAndAdministration: "",
     interaction: "",
@@ -175,7 +174,6 @@ const AdminCreateGeneric = () => {
 
           {/* TEXTAREAS (REPLACED QUILL) */}
           <RenderTextarea name="indication" label="Indication" />
-          <RenderTextarea name="composition" label="Composition" />
           <RenderTextarea name="pharmacology" label="Pharmacology" />
           <RenderTextarea
             name="dosageAndAdministration"

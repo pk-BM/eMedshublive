@@ -5,6 +5,7 @@ import { IoClose } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchBar from "../../components/Search/Searchbar";
+import logo from "../../assets/logo.jpg";
 
 const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -34,7 +35,7 @@ const Navbar = () => {
       <div className="flex justify-between items-center w-full h-20 px-6 md:px-28 relative">
         {/* Logo */}
         <Link to="/" className="text-2xl md:text-3xl font-bold">
-          eMedsHub
+          <img src={logo} alt="logo" className="w-50 sm:w-70" />
         </Link>
 
         {/* Hamburger */}

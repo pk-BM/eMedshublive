@@ -95,10 +95,10 @@ const LeaderDetails = () => {
           </p>
 
           <div className="mt-4 space-y-2 text-gray-700">
-            {leader.previous && (
+            {leader.pharmaLeader && (
               <p>
-                <span className="font-semibold text-gray-900">Previous:</span>{" "}
-                {leader.previous}
+                <span className="font-semibold text-gray-900">Pharma Leader:</span>{" "}
+                {leader.pharmaLeader}
               </p>
             )}
             {leader.institution && (
