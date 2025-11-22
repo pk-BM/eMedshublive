@@ -24,16 +24,24 @@ export const GetTestById = async (id) => {
 
 // ✅ Update an existing medical test
 export const UpdateTest = async (id, formData) => {
-  const response = await axiosInstance.put(`/medicaltest/update/${id}`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await axiosInstance.put(
+    `/medicaltest/update/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
   return response.data;
 };
 
 // ✅ Delete a medical test
 export const DeleteTest = async (id) => {
   const response = await axiosInstance.delete(`/medicaltest/delete/${id}`);
+  return response.data;
+};
+export const GetLatestTests = async () => {
+  const response = await axiosInstance.get(`/medicaltest/getLatestTests`);
   return response.data;
 };

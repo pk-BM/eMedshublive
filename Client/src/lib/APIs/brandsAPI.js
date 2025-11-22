@@ -50,3 +50,8 @@ export const GetAllHerbalBrands = async () => {
   const response = await axiosInstance.get("/brand/getHerbalBrands");
   return response.data;
 };
+
+export const GetBrandImages = async () => {
+  const response = await axiosInstance.get("/brand/getBrandImages");
+  return response.data;
+};

@@ -1,17 +1,22 @@
 import mongoose from "mongoose";
 
 const bannerSchema = new mongoose.Schema(
-    {
-        bannerImgUrl: {
-            type: String,
-            required: true,
-        },
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Auth",
-        },
+  {
+    bannerImgUrl: {
+      type: String,
+      required: true,
     },
-    { timestamps: true }
+    position: {
+      type: String,
+      enum: ["horizontal", "vertical"],
+      required: true,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Auth",
+    },
+  },
+  { timestamps: true }
 );
 
 const Banner = mongoose.model("Banner", bannerSchema);

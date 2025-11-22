@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const AdminCreateBanner = () => {
   const [bannerImg, setBannerImg] = useState(null);
+  const [bannerPosition, setBannerPosition] = useState("");
+
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -26,8 +28,9 @@ const AdminCreateBanner = () => {
 
     try {
       setLoading(true);
-      const fd = new FormData()
-      fd.append("bannerImg", bannerImg)
+      const fd = new FormData();
+      fd.append("bannerImg", bannerImg);
+      fd.append("position", bannerPosition);
       const response = await CreateBanner(fd);
       toast.success(response?.message || "Banner created successfully!");
       setTimeout(() => navigate("/admin/banners"), 600);
@@ -46,11 +49,36 @@ const AdminCreateBanner = () => {
           Add New Banner
         </h1>
 
+        <div className="my-10 bg-gray-200 p-4 rounded-md">
+          <h1 className="font-bold">Note</h1>
+          <p className="text-sm font-semibold">
+            For Vertical:{" "}
+            <span className="font-normal">width 180px height 360px</span>
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Banner Image Upload */}
+
           <div>
             <label className="block text-black font-medium mb-2">
-              Upload Banner Image *
+              Position
+            </label>
+            <select
+              name=""
+              id=""
+              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer outline-none"
+              required
+              onChange={(e) => setBannerPosition(e.target.value)}
+            >
+              <option value="">Select</option>
+              <option value="horizontal">Horizontal</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-black font-medium mb-2">
+              Upload Banner Image
             </label>
             <input
               type="file"

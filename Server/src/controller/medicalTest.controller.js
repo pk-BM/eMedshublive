@@ -253,3 +253,23 @@ export const deleteMedicalTest = async (req, res) => {
     );
   }
 };
+
+export const getLatestTests = async (req, res) => {
+  try {
+    const response = await MedicalTest.find()
+      .select("name description")
+      .limit(4)
+      .sort({ createdAt: -1 });
+
+    return sendResponse(res, 200, true, "success", response);
+  } catch (error) {
+    console.error("Error in getLatestTests controller:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};

@@ -7,10 +7,9 @@ const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1); // For keyboard navigation
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const navigate = useNavigate();
 
-  // 🔁 Debounced search
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchQuery.trim().length > 0) {
@@ -58,9 +57,9 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="relative z-[1000] flex flex-col items-center w-full space-y-3">
+    <div className="relative z-[1000] flex flex-col items-center w-full px-6 md:px-28">
       <motion.div
-        className="relative flex items-center justify-center w-full"
+        className="relative flex items-center justify-center w-full mb-2"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
@@ -74,7 +73,7 @@ const SearchBar = () => {
             setSelectedIndex(-1);
           }}
           onKeyDown={handleKeyDown}
-          className="w-full max-w-xl focus:outline-none font-semibold placeholder:font-semibold placeholder:text-gray-500 bg-white text-black px-3 py-3 md:py-4 rounded-l-md"
+          className="w-full focus:outline-none font-semibold placeholder:font-semibold placeholder:text-gray-500 bg-white text-black px-3 py-3 md:py-4 rounded-l-md border border-gray-300 text-sm"
         />
         <button
           onClick={() => handleSearch(searchQuery)}
@@ -86,7 +85,7 @@ const SearchBar = () => {
 
       {/*Search Results Dropdown */}
       {results.length > 0 && (
-        <div className="absolute top-full mt-2 w-full max-w-xl bg-white border border-gray-200 shadow-lg rounded-md overflow-hidden z-[50000]">
+        <div className="absolute top-full mt-2 w-full px-6 md:px-28 bg-white border border-gray-200 shadow-lg rounded-md overflow-hidden">
           {results.map((item, index) => (
             <div
               key={item._id}

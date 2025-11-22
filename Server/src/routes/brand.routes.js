@@ -12,11 +12,14 @@ import {
   deleteBrand,
   getAllopathicBrands,
   getHerbalBrands,
+  getBrandImages,
 } from "../controller/brand.controller.js";
 
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+router.get("/getBrandImages", getBrandImages);
 
 router.post(
   "/create",

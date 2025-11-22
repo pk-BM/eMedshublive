@@ -6,25 +6,17 @@ import Test from "../../components/Home/Test/Test";
 import News from "../../components/Home/News/News";
 import DoctorCarousel from "../../components/Home/DoctorCarousel/DoctorCarousel";
 
-import SearchBar from "../../components/Search/Searchbar";
-
 const Home = () => {
   return (
     <div className="w-full min-h-screen">
       {/* Hero Section */}
-      <div className="relative w-full min-h-[30rem] border-y-4 border-tertiary flex flex-col items-center justify-center overflow-hidden">
-        {/* Background Image */}
+      {/* <div className="relative w-full min-h-[30rem] border-y-4 border-tertiary flex flex-col items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-center bg-cover"
           style={{ backgroundImage: "url(/cover.jpg)" }}
         ></div>
         <div className="absolute inset-0 bg-black/40"></div>
-
-        {/* Search Section */}
-        <div className="w-full px-2 sm:px-0">
-          <SearchBar />
-        </div>
-      </div>
+      </div> */}
 
       {/* Other Sections */}
       <CarouselMeds />

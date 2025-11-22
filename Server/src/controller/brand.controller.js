@@ -234,3 +234,22 @@ export const deleteBrand = async (req, res) => {
     );
   }
 };
+
+export const getBrandImages = async (req, res) => {
+  try {
+    const brandsImages = await Brand.find()
+      .select("packImage")
+      .sort({ createdAt: -1 });
+
+    return sendResponse(res, 200, true, "sucess", brandsImages);
+  } catch (error) {
+    console.error("Error in getBrandImages:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};
