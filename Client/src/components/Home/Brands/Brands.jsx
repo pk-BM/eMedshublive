@@ -43,7 +43,11 @@ export default function Brands() {
         {brandsPackImage.map((brand, index) => (
           <SwiperSlide key={index}>
             <div className="brand-card">
-              <img src={brand.packImage} alt={brand._id} />
+              <img
+                src={brand.packImage}
+                className="w-80 h-40 object-contain"
+                alt={brand._id}
+              />
               <p>{brand.name}</p>
             </div>
           </SwiperSlide>
