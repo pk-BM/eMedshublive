@@ -18,7 +18,7 @@ const AdminAnalytics = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
@@ -93,7 +93,7 @@ const AdminAnalytics = () => {
   ];
 
   return (
-    <div className="w-full max-w-[84vw] mx-auto p-4">
+    <div className="w-full">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Admin Analytics Overview
       </h2>

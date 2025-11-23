@@ -10,35 +10,41 @@ import logo from "../../assets/logo.jpg";
 const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileSiteActive, setMobileSiteActive] = useState(false);
+  const [mobileDropdown, setMobileDropdown] = useState(null);
 
   const dropdownItems = {
-    MORE: [
-      { title: "News", link: "/news" },
-      { title: "Doctors Advice", link: "/doctor-advice" },
-      // { title: "Medical Test", link: "/tests" },
+    BRAND: [
+      { title: "Allopathic", link: "/brands-allophathic" },
+      { title: "Herbal", link: "/brands-herbal" },
     ],
     MEDICINE: [
       { title: "Allopathic", link: "/generics-allophathic" },
       { title: "Herbal", link: "/generics-herbal" },
     ],
-    BRAND: [
-      { title: "Allopathic", link: "/brands-allophathic" },
-      { title: "Herbal", link: "/brands-herbal" },
+    MORE: [
+      { title: "News", link: "/news" },
+      { title: "Doctors Advice", link: "/doctor-advice" },
     ],
   };
+
   const toggleMobileSideMenu = () => {
     setMobileSiteActive((prev) => !prev);
   };
 
+  const toggleMobileDropdown = (key) => {
+    setMobileDropdown((prev) => (prev === key ? null : key));
+  };
+
   return (
     <div className="border-b border-gray-300">
+      {/* Top area */}
       <div className="flex justify-between items-center w-full h-20 px-6 md:px-28 relative">
         {/* Logo */}
         <Link to="/" className="text-2xl md:text-3xl font-bold">
           <img src={logo} alt="logo" className="w-50 sm:w-70" />
         </Link>
 
-        {/* Hamburger */}
+        {/* Hamburger - mobile only */}
         <div className="block md:hidden">
           <GiHamburgerMenu
             size={24}
@@ -47,17 +53,17 @@ const Navbar = () => {
           />
         </div>
 
-        {/* ===== Mobile Sidebar ===== */}
+        {/* MOBILE SIDEBAR */}
         <AnimatePresence>
           {mobileSiteActive && (
             <>
-              {/* Dark overlay */}
+              {/* Overlay */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.6 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-0 bg-black z-40"
+                className="fixed inset-0 bg-black z-[1001]"
                 onClick={toggleMobileSideMenu}
               />
 
@@ -69,7 +75,8 @@ const Navbar = () => {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="fixed top-0 left-0 w-[80%] sm:w-[60%] h-full bg-white z-[2000] shadow-lg p-6 flex flex-col"
               >
-                <div className="flex justify-end items-center mb-6">
+                {/* Close */}
+                <div className="flex justify-end mb-6">
                   <button
                     onClick={toggleMobileSideMenu}
                     className="p-2 bg-gray-200 rounded-full"
@@ -78,147 +85,190 @@ const Navbar = () => {
                   </button>
                 </div>
 
+                {/* MOBILE MENU (exact same order as desktop) */}
                 <ul className="space-y-4">
-                  <li className="font-medium">GENERIC</li>
-                  <ul className="pl-3 space-y-2">
-                    {dropdownItems.MEDICINE.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className="text-sm text-gray-600 cursor-pointer"
-                      >
-                        <Link
-                          to={item.link}
-                          className="block w-full"
-                          onClick={() => setMobileSiteActive(false)}
-                        >
-                          {item.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <ul className="pl-3 space-y-2"></ul>
                   <Link
-                    to="/pharmaceuticals"
-                    className="block w-full"
-                    onClick={() => setMobileSiteActive(false)}
+                    to="/"
+                    onClick={toggleMobileSideMenu}
+                    className="block text-sm font-medium"
                   >
-                    <li className="font-medium">PHARMACEUTICALS</li>
+                    Home
                   </Link>
 
-                  <li className="font-medium">BRAND</li>
-                  <ul className="pl-3 space-y-2">
-                    {dropdownItems.BRAND.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className="text-sm text-gray-600 cursor-pointer"
-                      >
-                        <Link
-                          to={item.link}
-                          className="block w-full"
-                          onClick={() => setMobileSiteActive(false)}
-                        >
-                          {item.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  {/* BRAND */}
+                  <li>
+                    <div
+                      className="flex justify-between items-center cursor-pointer font-medium"
+                      onClick={() => toggleMobileDropdown("BRAND")}
+                    >
+                      Brand <IoIosArrowDown />
+                    </div>
 
-                  <li className="font-medium">MORE</li>
-                  <ul className="pl-3 space-y-2">
-                    {dropdownItems.MORE.map((item, idx) => (
-                      <li
-                        key={idx}
-                        className="text-sm text-gray-600 cursor-pointer"
-                      >
-                        <Link
-                          to={item.link}
-                          className="block w-full"
-                          onClick={() => setMobileSiteActive(false)}
-                        >
-                          {item.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                    {mobileDropdown === "BRAND" && (
+                      <ul className="pl-4 pt-2 space-y-2">
+                        {dropdownItems.BRAND.map((item) => (
+                          <li key={item.link}>
+                            <Link
+                              to={item.link}
+                              onClick={toggleMobileSideMenu}
+                              className="text-sm text-gray-700"
+                            >
+                              {item.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
 
-                  {/* <li className="font-medium">CONTACT</li> */}
+                  {/* GENERIC */}
+                  <li>
+                    <div
+                      className="flex justify-between items-center cursor-pointer font-medium"
+                      onClick={() => toggleMobileDropdown("MEDICINE")}
+                    >
+                      Generic <IoIosArrowDown />
+                    </div>
+
+                    {mobileDropdown === "MEDICINE" && (
+                      <ul className="pl-4 pt-2 space-y-2">
+                        {dropdownItems.MEDICINE.map((item) => (
+                          <li key={item.link}>
+                            <Link
+                              to={item.link}
+                              onClick={toggleMobileSideMenu}
+                              className="text-sm text-gray-700"
+                            >
+                              {item.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+
+                  <Link
+                    to="/new-product"
+                    onClick={toggleMobileSideMenu}
+                    className="block text-sm font-medium"
+                  >
+                    New Product
+                  </Link>
+
+                  <Link
+                    to="/bioequivalent-drugs"
+                    onClick={toggleMobileSideMenu}
+                    className="block text-sm font-medium"
+                  >
+                    Bioequivalent Drug
+                  </Link>
+
+                  <Link
+                    to="/pharmaceuticals"
+                    onClick={toggleMobileSideMenu}
+                    className="block text-sm font-medium"
+                  >
+                    Pharmaceuticals
+                  </Link>
+
+                  <Link
+                    to="/tests"
+                    onClick={toggleMobileSideMenu}
+                    className="block text-sm font-medium"
+                  >
+                    Medical Test
+                  </Link>
+
+                  {/* MORE */}
+                  <li>
+                    <div
+                      className="flex justify-between items-center cursor-pointer font-medium"
+                      onClick={() => toggleMobileDropdown("MORE")}
+                    >
+                      More <IoIosArrowDown />
+                    </div>
+
+                    {mobileDropdown === "MORE" && (
+                      <ul className="pl-4 pt-2 space-y-2">
+                        {dropdownItems.MORE.map((item) => (
+                          <li key={item.link}>
+                            <Link
+                              to={item.link}
+                              onClick={toggleMobileSideMenu}
+                              className="text-sm text-gray-700"
+                            >
+                              {item.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
                 </ul>
               </motion.div>
             </>
           )}
         </AnimatePresence>
 
-        {/* ===== Desktop Menu ===== */}
-        <ul className="hidden md:flex items-center relative z-[2000]">
+        {/* DESKTOP MENU */}
+        <ul className="hidden md:flex items-center relative z-[3000]">
           <Link
             to="/"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+            className="text-sm hover:text-secondary hover:underline p-3 font-medium"
           >
             Home
           </Link>
-          {/* Brands with dropdown */}
+
+          {/* BRAND */}
           <li
-            className="relative group cursor-pointer"
+            className="relative"
             onMouseEnter={() => setOpenDropdown("BRAND")}
             onMouseLeave={() => setOpenDropdown(null)}
           >
-            <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
-              <span>Brand</span>
-              <IoIosArrowDown size={16} />
+            <p className="text-sm font-medium p-3 flex items-center gap-1 cursor-pointer">
+              Brand <IoIosArrowDown />
             </p>
+
             <AnimatePresence>
               {openDropdown === "BRAND" && (
                 <motion.ul
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
+                  className="absolute bg-white shadow-lg rounded-md p-2 min-w-[14rem]"
                 >
-                  {dropdownItems.BRAND.map((item, idx) => (
-                    <motion.li
-                      key={idx}
-                      whileHover={{ x: 8, color: "#0d9488" }}
-                      transition={{ type: "tween", duration: 0.2 }}
-                      className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
-                    >
-                      <Link to={item.link}>{item.title}</Link>
-                    </motion.li>
+                  {dropdownItems.BRAND.map((i) => (
+                    <li key={i.link} className="px-4 py-2 text-sm">
+                      <Link to={i.link}>{i.title}</Link>
+                    </li>
                   ))}
                 </motion.ul>
               )}
             </AnimatePresence>
           </li>
 
-          {/* MEDICINE with dropdown */}
+          {/* GENERIC */}
           <li
-            className="relative group cursor-pointer"
+            className="relative"
             onMouseEnter={() => setOpenDropdown("MEDICINE")}
             onMouseLeave={() => setOpenDropdown(null)}
           >
-            <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
-              <span>Generic</span>
-              <IoIosArrowDown size={16} />
+            <p className="text-sm font-medium p-3 flex items-center gap-1 cursor-pointer">
+              Generic <IoIosArrowDown />
             </p>
+
             <AnimatePresence>
               {openDropdown === "MEDICINE" && (
                 <motion.ul
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
+                  className="absolute bg-white shadow-lg rounded-md p-2 min-w-[14rem]"
                 >
-                  {dropdownItems.MEDICINE.map((item, idx) => (
-                    <motion.li
-                      key={idx}
-                      whileHover={{ x: 8, color: "#0d9488" }}
-                      transition={{ type: "tween", duration: 0.2 }}
-                      className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
-                    >
-                      <Link to={item.link}>{item.title}</Link>
-                    </motion.li>
+                  {dropdownItems.MEDICINE.map((i) => (
+                    <li key={i.link} className="px-4 py-2 text-sm">
+                      <Link to={i.link}>{i.title}</Link>
+                    </li>
                   ))}
                 </motion.ul>
               )}
@@ -227,40 +277,40 @@ const Navbar = () => {
 
           <Link
             to="/new-product"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+            className="text-sm hover:text-secondary hover:underline p-3 font-medium"
           >
             New Product
           </Link>
+
           <Link
             to="/bioequivalent-drugs"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+            className="text-sm hover:text-secondary hover:underline p-3 font-medium"
           >
             Bioequivalent Drug
           </Link>
 
-          {/* INDICATIONS */}
           <Link
             to="/pharmaceuticals"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+            className="text-sm hover:text-secondary hover:underline p-3 font-medium"
           >
             Pharmaceuticals
           </Link>
+
           <Link
             to="/tests"
-            className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium cursor-pointer p-3"
+            className="text-sm hover:text-secondary hover:underline p-3 font-medium"
           >
-            Medicle Test
+            Medical Test
           </Link>
 
-          {/* MORE with dropdown */}
+          {/* MORE */}
           <li
-            className="relative group cursor-pointer"
+            className="relative"
             onMouseEnter={() => setOpenDropdown("MORE")}
             onMouseLeave={() => setOpenDropdown(null)}
           >
-            <p className="text-sm hover:text-secondary hover:underline transition-all duration-300 font-medium p-3 flex items-center gap-1">
-              <span>More</span>
-              <IoIosArrowDown size={16} />
+            <p className="text-sm font-medium p-3 flex items-center gap-1 cursor-pointer">
+              More <IoIosArrowDown />
             </p>
 
             <AnimatePresence>
@@ -269,18 +319,12 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                  className="absolute left-0 text-gray-600 bg-white shadow-lg rounded-md p-2 w-full min-w-[16rem] z-50"
+                  className="absolute bg-white shadow-lg rounded-md p-2 min-w-[14rem]"
                 >
-                  {dropdownItems.MORE.map((item, idx) => (
-                    <motion.li
-                      key={idx}
-                      whileHover={{ x: 8, color: "#0d9488" }}
-                      transition={{ type: "tween", duration: 0.2 }}
-                      className="px-4 py-2 text-gray-600 rounded-md text-sm cursor-pointer"
-                    >
-                      <Link to={item.link}>{item.title}</Link>
-                    </motion.li>
+                  {dropdownItems.MORE.map((i) => (
+                    <li key={i.link} className="px-4 py-2 text-sm">
+                      <Link to={i.link}>{i.title}</Link>
+                    </li>
                   ))}
                 </motion.ul>
               )}
@@ -288,7 +332,8 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-      {/* Search Section */}
+
+      {/* Search */}
       <div className="w-full">
         <SearchBar />
       </div>

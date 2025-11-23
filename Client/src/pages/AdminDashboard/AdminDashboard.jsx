@@ -36,15 +36,21 @@ import AdminUpdateBanner from "../../components/Admin/Banner/AdminUpdateBanner";
 
 const AdminDashboard = () => {
   return (
-    <div className="flex">
-      <div className="w-full max-w-[16vw]">
-        <AdminSidebar className="w-full" />
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className="hidden lg:block w-64">
+        <AdminSidebar />
       </div>
 
-      <div className="flex items-start w-full max-w-[84vw]">
+      {/* Mobile Sidebar */}
+      <div className="lg:hidden">
+        <AdminSidebar />
+      </div>
+
+      {/* Content Area */}
+      <div className="flex-1 md:p-4 mt-14 md:mt-10 lg:mt-0">
         <Routes>
           <Route path="/dashboard" element={<AdminAnalytics />} />
-
           <Route path="/news" element={<AllNews />} />
           <Route path="/news/create" element={<CreateNews />} />
           <Route path="/news/update/:id" element={<AdminUpdateNews />} />
@@ -59,11 +65,20 @@ const AdminDashboard = () => {
 
           <Route path="/medical-test" element={<AllTests />} />
           <Route path="/medical-test/create" element={<AdminCreateTest />} />
-          <Route path="/medical-test/update/:id" element={<AdminUpdateTest />} />
+          <Route
+            path="/medical-test/update/:id"
+            element={<AdminUpdateTest />}
+          />
 
           <Route path="/trusted-center" element={<AllTrustedCenter />} />
-          <Route path="/trusted-center/create" element={<AdminCreateTrustedCenter />} />
-          <Route path="/trusted-center/update/:id" element={<AdminUpdateTrustedCenter />} />
+          <Route
+            path="/trusted-center/create"
+            element={<AdminCreateTrustedCenter />}
+          />
+          <Route
+            path="/trusted-center/update/:id"
+            element={<AdminUpdateTrustedCenter />}
+          />
 
           <Route path="/advertisement" element={<AllAdverisement />} />
           <Route
@@ -75,13 +90,13 @@ const AdminDashboard = () => {
             element={<AdminUpdateAdvertisements />}
           />
 
-          <Route path="/Pharmaceuticals" element={<AllPharmaceutical />} />
+          <Route path="/pharmaceuticals" element={<AllPharmaceutical />} />
           <Route
-            path="/Pharmaceuticals/create"
+            path="/pharmaceuticals/create"
             element={<AdminCreatePharmaceuticals />}
           />
           <Route
-            path="/Pharmaceuticals/update/:id"
+            path="/pharmaceuticals/update/:id"
             element={<AdminUpdatePharmaceuticals />}
           />
 

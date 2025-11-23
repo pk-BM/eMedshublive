@@ -149,8 +149,8 @@ const AdminSidebar = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`fixed top-0 left-0 h-full min-h-screen overflow-y-auto bg-white border-r border-gray-300 flex flex-col justify-between z-40 shadow-md transition-all 
-              ${isDesktop ? "w-[220px]" : "w-[75%] sm:w-[60%]"}`}
+            className={`fixed top-0 left-0 h-full bg-white border-r shadow-md z-40 overflow-y-auto 
+    ${isDesktop ? "w-64" : isOpen ? "w-64" : "w-0"}`}
           >
             {/* Top section */}
             <div className="pt-8">
@@ -208,9 +208,6 @@ const AdminSidebar = () => {
           onClick={() => setIsOpen(false)}
         />
       )}
-
-      {/* Page content offset for desktop */}
-      {isDesktop && <div className="w-[100px]" />}
     </>
   );
 };
