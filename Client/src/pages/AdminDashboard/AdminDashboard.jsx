@@ -33,6 +33,7 @@ import AdminUpdateLeader from "../../components/Admin/Leaders/AdminUpdateLeader"
 import AdminAllBanners from "../../components/Admin/Banner/AdminAllBanners";
 import AdminCreateBanner from "../../components/Admin/Banner/AdminCreateBanner";
 import AdminUpdateBanner from "../../components/Admin/Banner/AdminUpdateBanner";
+import About from "../About";
 
 const AdminDashboard = () => {
   return (
@@ -111,6 +112,8 @@ const AdminDashboard = () => {
           <Route path="/banners" element={<AdminAllBanners />} />
           <Route path="/banner/create" element={<AdminCreateBanner />} />
           <Route path="/banner/update/:id" element={<AdminUpdateBanner />} />
+
+          <Route path="/about" element={<About />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

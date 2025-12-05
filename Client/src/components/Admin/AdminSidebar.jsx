@@ -101,6 +101,11 @@ const AdminSidebar = () => {
       path: "/admin/trusted-center",
       icon: <FaUserShield size={22} />,
     },
+    {
+      label: "About",
+      path: "/admin/about",
+      icon: <FaUserShield size={22} />,
+    },
     { label: "Leader", path: "/admin/leaders", icon: <MdStars size={22} /> },
     { label: "Banners", path: "/admin/banners", icon: <MdStars size={22} /> },
   ];

@@ -25,10 +25,7 @@ const News = () => {
       const formattedNews = sortedNews.map((item) => ({
         _id: item._id,
         title: item.title || "Untitled News",
-        date: new Date(item.createdAt).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        }),
+        image: item.image,
       }));
 
       // Fill remaining slots with placeholders
@@ -63,10 +60,7 @@ const News = () => {
       const formattedDA = sortedDA.map((item) => ({
         _id: item._id,
         title: item.title || "Untitled",
-        date: new Date(item.createdAt).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-        }),
+        image: item.image,
       }));
 
       // Fill remaining slots with placeholders
@@ -132,9 +126,11 @@ const News = () => {
                     className="flex justify-between items-center w-full"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="bg-pink-100 text-pink-800 px-2 py-1 rounded-md text-sm font-semibold">
-                        {item.date}
-                      </span>
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="w-full max-w-28 h-20 object-cover border"
+                      />
                       <span className="text-gray-800 font-medium">
                         {item.title}
                       </span>
@@ -184,9 +180,11 @@ const News = () => {
                     className="flex justify-between items-center w-full"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="bg-pink-100 text-pink-800 px-2 py-1 rounded-md text-sm font-semibold">
-                        {item.date}
-                      </span>
+                      <img
+                        src={item.image}
+                        alt=""
+                        className="w-full max-w-28 h-20 object-cover border"
+                      />
                       <span className="text-gray-800 font-medium">
                         {item.title}
                       </span>

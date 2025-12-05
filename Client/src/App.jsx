@@ -28,6 +28,7 @@ import Leaders from "./pages/Leaders/Leaders";
 import LeaderDetail from "./pages/LeaderDetail/LeaderDetail";
 import NewProduct from "./pages/NewProduct/NewProduct";
 import BioequivalentDrugs from "./pages/BioequivalentDrugs/BioequivalentDrugs";
+import PublicAbout from "./pages/PublicAbout";
 
 const HIDE_NAVBAR = ["/v1/admin/dashboard"];
 const HIDE_FOOTER = ["/v1/admin/dashboard"];
@@ -70,6 +71,7 @@ const App = () => {
 
         <Route path="/leaders" element={<Leaders />} />
         <Route path="/leaders/:id" element={<LeaderDetail />} />
+        <Route path="/about-us" element={<PublicAbout />} />
 
         {/* Hidden Route */}
         <Route

@@ -41,7 +41,7 @@ const DoctorAdvice = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 px-5 py-10  font-inter">
+    <div className="min-h-screen bg-gray-50 px-5 py-10 font-inter">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4 border-b-2 border-green-200 pb-4">
         <h2 className="text-2xl font-semibold text-slate-800 flex items-center gap-2">

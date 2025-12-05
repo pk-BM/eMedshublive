@@ -31,6 +31,7 @@ import medicalRoutes from "./routes/medicalTest.routes.js";
 import trustedCenterRoutes from "./routes/trustedCenter.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import bannerRoutes from "./routes/banner.route.js";
+import aboutRoutes from "./routes/about.route.js";
 
 // APIs
 app.get("/", (req, res) => {
@@ -49,6 +50,8 @@ app.use("/api/medicaltest", medicalRoutes);
 app.use("/api/trustedCenter", trustedCenterRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/banner", bannerRoutes);
+
+app.use("/api/about", aboutRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on the PORT: ${PORT}`);

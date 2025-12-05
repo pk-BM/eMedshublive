@@ -18,7 +18,7 @@ const Footer = () => {
         <div>
           <h1 className="text-gray-500 font-semibold mb-4">ABOUT</h1>
           <ul className="text-sm flex flex-col gap-2">
-            <li>About us</li>
+            <Link to="/about-us">About us</Link>
             <li>Blog</li>
             <li>FAQ</li>
             <li>Login</li>

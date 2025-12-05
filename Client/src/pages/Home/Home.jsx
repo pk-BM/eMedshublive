@@ -21,25 +21,22 @@ const Home = () => {
       {/* Other Sections */}
       <CarouselMeds />
 
+      <News />
+
       <Heading
         heading="Pharma Leaders"
         text="Effective leadership is characterized by vision, integrity, and the ability to empower others"
       />
       <DoctorCarousel />
 
-      <News />
-
-      <Heading
-        heading="Product Highlight"
-        text=""
-      />
+      <Heading heading="Product Highlight" text="" />
       <Brands />
 
-      <Heading
+      {/* <Heading
         heading="Medical Test"
         text="Find complete details of available medical tests, procedures, and reports."
       />
-      <Test />
+      <Test /> */}
     </div>
   );
 };
