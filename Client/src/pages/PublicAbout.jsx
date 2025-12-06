@@ -19,6 +19,10 @@ const PublicAbout = () => {
   useEffect(() => {
     fetchAbout();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="my-10 px-6 md:px-28">
       <h1 className="text-3xl font-bold">About Us</h1>
