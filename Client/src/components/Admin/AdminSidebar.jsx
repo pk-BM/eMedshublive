@@ -108,6 +108,7 @@ const AdminSidebar = () => {
     },
     { label: "Leader", path: "/admin/leaders", icon: <MdStars size={22} /> },
     { label: "Banners", path: "/admin/banners", icon: <MdStars size={22} /> },
+    { label: "Hero", path: "/admin/hero", icon: <MdStars size={22} /> },
   ];
 
   const sidebarVariants = {

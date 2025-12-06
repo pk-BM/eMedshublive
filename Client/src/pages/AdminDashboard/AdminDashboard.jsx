@@ -34,6 +34,7 @@ import AdminAllBanners from "../../components/Admin/Banner/AdminAllBanners";
 import AdminCreateBanner from "../../components/Admin/Banner/AdminCreateBanner";
 import AdminUpdateBanner from "../../components/Admin/Banner/AdminUpdateBanner";
 import About from "../About";
+import AdminHero from "../AdminHero/AdminHero";
 
 const AdminDashboard = () => {
   return (
@@ -114,6 +115,7 @@ const AdminDashboard = () => {
           <Route path="/banner/update/:id" element={<AdminUpdateBanner />} />
 
           <Route path="/about" element={<About />} />
+          <Route path="/hero" element={<AdminHero />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

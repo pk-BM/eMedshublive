@@ -32,6 +32,7 @@ import trustedCenterRoutes from "./routes/trustedCenter.routes.js";
 import searchRoutes from "./routes/search.routes.js";
 import bannerRoutes from "./routes/banner.route.js";
 import aboutRoutes from "./routes/about.route.js";
+import heroRoutes from "./routes/hero.routes.js";
 
 // APIs
 app.get("/", (req, res) => {
@@ -52,6 +53,7 @@ app.use("/api/search", searchRoutes);
 app.use("/api/banner", bannerRoutes);
 
 app.use("/api/about", aboutRoutes);
+app.use("/api/hero", heroRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on the PORT: ${PORT}`);
