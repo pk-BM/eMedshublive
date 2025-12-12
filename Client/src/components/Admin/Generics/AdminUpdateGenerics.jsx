@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { GetGenericById, UpdateGeneric } from "../../../lib/APIs/genericAPI";
+import { GetAllBrands } from "../../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
 
 // ----------- TEXTAREA COMPONENT (instead of Quill) -----------
@@ -25,12 +26,13 @@ const AdminUpdateGenerics = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(null);
-
-  const [originalFileUrl, setOriginalFileUrl] = useState(null);
+  const [allBrandsData, setAllBrandsData] = useState([]);
+  const [searchBrand, setSearchBrand] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
 
+  // Fetch Generic
   useEffect(() => {
     const fetchGeneric = async () => {
       setDataLoading(true);
@@ -38,12 +40,10 @@ const AdminUpdateGenerics = () => {
         const response = await GetGenericById(id);
         const fetchedData = response.data;
 
-        setOriginalFileUrl(fetchedData.innovatorMonograph || null);
-
         setFormData({
           name: fetchedData.name || "",
-          file: fetchedData.innovatorMonograph || null,
-          image: fetchedData.structureImage || null,
+          file: null,
+          image: null,
           indication: fetchedData.indication || "",
           pharmacology: fetchedData.pharmacology || "",
           dosageAndAdministration: fetchedData.dosageAndAdministration || "",
@@ -55,7 +55,8 @@ const AdminUpdateGenerics = () => {
           therapeuticClass: fetchedData.therapeuticClass || "",
           storageCondition: fetchedData.storageCondition || "",
           isActive: fetchedData.isActive ?? true,
-          allopathicOrHerbal: fetchedData?.allopathicOrHerbal || "",
+          allopathicOrHerbal: fetchedData.allopathicOrHerbal || "",
+          availableBrands: fetchedData.availableBrands || [], // <-- brands array
         });
 
         setPreviewImage(fetchedData.structureImage || null);
@@ -66,20 +67,31 @@ const AdminUpdateGenerics = () => {
         setDataLoading(false);
       }
     };
+
     fetchGeneric();
   }, [id]);
 
+  // Fetch all brands
+  useEffect(() => {
+    const fetchAllBrands = async () => {
+      try {
+        const response = await GetAllBrands();
+        setAllBrandsData(response.data);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      }
+    };
+    fetchAllBrands();
+  }, []);
+
+  // Handle text, file, checkbox changes
   const handleChange = (e) => {
     const { name, value, type, files, checked } = e.target;
 
     if (type === "file") {
       const file = files[0];
       setFormData((prev) => ({ ...prev, [name]: file }));
-      if (name === "image" && file) {
-        setPreviewImage(URL.createObjectURL(file));
-      } else if (name === "image" && !file) {
-        setPreviewImage(formData.image || null);
-      }
+      if (name === "image" && file) setPreviewImage(URL.createObjectURL(file));
     } else if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
@@ -87,9 +99,23 @@ const AdminUpdateGenerics = () => {
     }
   };
 
+  // Handle textarea changes
   const handleTextAreaChange = useCallback((field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
+
+  // Toggle availableBrands selection
+  const toggleBrand = (brandId) => {
+    setFormData((prev) => {
+      const isSelected = prev.availableBrands.includes(brandId);
+      return {
+        ...prev,
+        availableBrands: isSelected
+          ? prev.availableBrands.filter((b) => b !== brandId)
+          : [...prev.availableBrands, brandId],
+      };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,7 +123,26 @@ const AdminUpdateGenerics = () => {
 
     try {
       setLoading(true);
-      const response = await UpdateGeneric(id, formData);
+
+      // Convert availableBrands array to JSON string for backend
+      const submitData = new FormData();
+      for (let key in formData) {
+        if (formData[key] === undefined || formData[key] === null) continue;
+
+        if (key === "availableBrands") {
+          submitData.append(key, JSON.stringify(formData[key]));
+          continue;
+        }
+
+        if (formData[key] instanceof File) {
+          submitData.append(key, formData[key]);
+          continue;
+        }
+
+        submitData.append(key, formData[key]);
+      }
+
+      const response = await UpdateGeneric(id, submitData);
       toast.success(response.message || "Generic updated successfully!");
       setTimeout(() => navigate("/admin/generic"), 400);
     } catch (error) {
@@ -107,6 +152,10 @@ const AdminUpdateGenerics = () => {
       setLoading(false);
     }
   };
+
+  const filteredBrands = allBrandsData.filter((b) =>
+    b.name.toLowerCase().includes(searchBrand.toLowerCase())
+  );
 
   if (dataLoading) {
     return (
@@ -119,9 +168,7 @@ const AdminUpdateGenerics = () => {
   if (!formData) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-xl text-red-600">
-          Error: Could not load generic data.
-        </p>
+        <p className="text-xl text-red-600">Error: Could not load generic data.</p>
       </div>
     );
   }
@@ -202,6 +249,41 @@ const AdminUpdateGenerics = () => {
               <option value="Allopathic">Allopathic</option>
               <option value="Herbal">Herbal</option>
             </select>
+          </div>
+
+          {/* Brands */}
+          <div>
+            <label className="block text-black font-medium mb-2">Brands</label>
+            <input
+              type="text"
+              placeholder="Search brand..."
+              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black"
+              value={searchBrand}
+              onChange={(e) => setSearchBrand(e.target.value)}
+            />
+            <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
+              {filteredBrands.length === 0 ? (
+                <p className="text-gray-500 text-sm">No brands found</p>
+              ) : (
+                filteredBrands.map((brand) => (
+                  <label
+                    key={brand._id}
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={formData.availableBrands.includes(brand._id)}
+                      onChange={() => toggleBrand(brand._id)}
+                    />
+                    <span className="text-black">{brand.name}</span>
+                  </label>
+                ))
+              )}
+            </div>
+            <p className="text-gray-600 text-sm mt-2">
+              Selected: {formData.availableBrands.length}
+            </p>
           </div>
 
           {/* Therapeutic Class */}

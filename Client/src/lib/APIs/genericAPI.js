@@ -2,19 +2,34 @@ import { axiosInstance } from "../axios";
 
 export const CreateGeneric = async (formData) => {
   const fd = new FormData();
-  // loop through sab values
+
   for (let key in formData) {
-    if (formData[key] !== undefined && formData[key] !== null) {
-      fd.append(key, formData[key]);
+    if (formData[key] === undefined || formData[key] === null) continue;
+
+    // FIX ONLY THIS KEY → stringify array
+    if (key === "availableBrands") {
+      fd.append(key, JSON.stringify(formData[key]));
+      continue;
     }
+
+    // images / files
+    if (formData[key] instanceof File) {
+      fd.append(key, formData[key]);
+      continue;
+    }
+
+    // normal text fields
+    fd.append(key, formData[key]);
   }
+
   const response = await axiosInstance.post("/generic/create", fd, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
+    headers: { "Content-Type": "multipart/form-data" },
   });
+
   return response.data;
 };
+
+
 
 export const GetGenerics = async () => {
   const response = await axiosInstance.get("/generic/getAll");

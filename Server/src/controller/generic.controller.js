@@ -9,15 +9,30 @@ import { deleteFromCloudinary } from "../utils/deleteDataFromCloudinary.js";
 
 export const createGeneric = async (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, } = req.body;
     if (!name || name.trim() === "") {
       return sendResponse(res, 400, false, "Generic name is required", null);
     }
+
 
     const data = {
       ...req.body,
       createdBy: req.user?._id,
     };
+
+    if (req.body.availableBrands) {
+      try {
+        if (Array.isArray(req.body.availableBrands)) {
+          req.body.availableBrands = JSON.parse(req.body.availableBrands[0]);
+        } else {
+          req.body.availableBrands = JSON.parse(req.body.availableBrands);
+        }
+      } catch (err) {
+        return sendResponse(res, 400, false, "Invalid availableBrands format", null);
+      }
+    }
+
+    data.availableBrands = req.body.availableBrands;
 
     // Handle optional image and file uploads
     if (req.files) {
@@ -155,7 +170,11 @@ export const getGenericById = async (req, res) => {
       return sendResponse(res, 400, false, "Invalid ID", null);
     }
 
-    const generic = await Generic.findById(id);
+    const generic = await Generic.findById(id).populate({
+      path: "availableBrands",
+      select: "name strength packSize totalPrice manufacturer",
+      populate: { path: "manufacturer", select: "name" }
+    })
     if (!generic) {
       return sendResponse(res, 404, false, "Generic not found", null);
     }
@@ -192,6 +211,21 @@ export const updateGeneric = async (req, res) => {
       return sendResponse(res, 404, false, "Generic not found", null);
     }
 
+    // -----------------------------
+    // Parse availableBrands properly
+    // -----------------------------
+    if (req.body.availableBrands) {
+      try {
+        if (Array.isArray(req.body.availableBrands)) {
+          req.body.availableBrands = JSON.parse(req.body.availableBrands[0]);
+        } else {
+          req.body.availableBrands = JSON.parse(req.body.availableBrands);
+        }
+      } catch (err) {
+        return sendResponse(res, 400, false, "Invalid availableBrands format", null);
+      }
+    }
+
     const updatedData = { ...req.body };
 
     if (req.files) {
@@ -208,10 +242,7 @@ export const updateGeneric = async (req, res) => {
 
       const file = req?.files?.file?.[0];
       if (file) {
-        const fileUrl = await uploadFileToCloudinary(
-          file.buffer,
-          file.originalname
-        );
+        const fileUrl = await uploadFileToCloudinary(file.buffer, file.originalname);
         if (fileUrl) {
           if (existingGeneric.innovatorMonograph) {
             await deleteFromCloudinary(existingGeneric.innovatorMonograph);
@@ -247,6 +278,7 @@ export const updateGeneric = async (req, res) => {
     );
   }
 };
+
 
 export const deleteGeneric = async (req, res) => {
   try {

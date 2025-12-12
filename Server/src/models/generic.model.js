@@ -17,6 +17,13 @@ const genericSchema = new mongoose.Schema(
     structureImage: {
       type: String, // image URL
     },
+    availableBrands: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Brand",
+        required: false
+      }
+    ],
     indication: {
       type: String,
     },
