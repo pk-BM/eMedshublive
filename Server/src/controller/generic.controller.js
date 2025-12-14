@@ -206,8 +206,6 @@ export const getGenericById = async (req, res) => {
 export const updateGeneric = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(req.body);
-
     if (!mongoose.isValidObjectId(id)) {
       return sendResponse(res, 400, false, "Invalid ID", null);
     }
