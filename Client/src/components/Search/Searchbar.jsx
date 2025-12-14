@@ -90,15 +90,19 @@ const SearchBar = () => {
             <div
               key={item._id}
               onClick={() => handleResultClick(item.apiPath)}
-              className={`flex justify-between items-center px-4 py-3 cursor-pointer transition ${
-                selectedIndex === index ? "bg-gray-200" : "hover:bg-gray-100"
+              className={`group flex justify-between items-center px-4 py-3 cursor-pointer transition ${
+                selectedIndex === index ? "bg-tertiary" : "hover:bg-tertiary"
               }`}
             >
               <div>
-                <p className="font-semibold text-gray-800">{item.name}</p>
-                <p className="text-sm text-gray-500">{item.type}</p>
+                <p className="font-semibold text-gray-800 group-hover:text-white">
+                  {item.name}
+                </p>
+                <p className="text-sm text-gray-500 group-hover:text-white">
+                  {item.type}
+                </p>
               </div>
-              <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded">
+              <span className="text-xs bg-gray-200 text-gray-600  px-2 py-1 rounded">
                 View
               </span>
             </div>
