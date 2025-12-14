@@ -56,7 +56,9 @@ const AdminUpdateGenerics = () => {
           storageCondition: fetchedData.storageCondition || "",
           isActive: fetchedData.isActive ?? true,
           allopathicOrHerbal: fetchedData.allopathicOrHerbal || "",
-          availableBrands: fetchedData.availableBrands || [], // <-- brands array
+          availableBrands: (fetchedData.availableBrands || []).map(
+            (b) => b._id
+          ),
         });
 
         setPreviewImage(fetchedData.structureImage || null);
@@ -124,25 +126,7 @@ const AdminUpdateGenerics = () => {
     try {
       setLoading(true);
 
-      // Convert availableBrands array to JSON string for backend
-      const submitData = new FormData();
-      for (let key in formData) {
-        if (formData[key] === undefined || formData[key] === null) continue;
-
-        if (key === "availableBrands") {
-          submitData.append(key, JSON.stringify(formData[key]));
-          continue;
-        }
-
-        if (formData[key] instanceof File) {
-          submitData.append(key, formData[key]);
-          continue;
-        }
-
-        submitData.append(key, formData[key]);
-      }
-
-      const response = await UpdateGeneric(id, submitData);
+      const response = await UpdateGeneric(id, formData);
       toast.success(response.message || "Generic updated successfully!");
       setTimeout(() => navigate("/admin/generic"), 400);
     } catch (error) {
@@ -168,7 +152,9 @@ const AdminUpdateGenerics = () => {
   if (!formData) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
-        <p className="text-xl text-red-600">Error: Could not load generic data.</p>
+        <p className="text-xl text-red-600">
+          Error: Could not load generic data.
+        </p>
       </div>
     );
   }

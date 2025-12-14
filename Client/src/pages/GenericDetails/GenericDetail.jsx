@@ -4,6 +4,8 @@ import { toast } from "react-toastify";
 import { MdOutlineMedicalServices } from "react-icons/md";
 import { FaFilePdf } from "react-icons/fa";
 import { GetGenericById } from "../../lib/APIs/genericAPI";
+import { Link } from "react-router";
+import { CiTablets1 } from "react-icons/ci";
 
 const GenericDetails = () => {
   const { id } = useParams();
@@ -54,8 +56,12 @@ const GenericDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 sm:px-6 py-10 font-inter">
-      <div className="w-full sm:w-[85%] lg:w-[80%] mx-auto">
+    <div className="min-h-screen bg-gray-50 px-6 md:px-28 py-10 font-inter flex items-start w-full">
+      <div
+        className={`w-full mx-auto ${
+          formData?.availableBrands?.length > 0 ? "max-w-[65%]" : null
+        }`}
+      >
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 border-b-2 border-green-200 pb-4 gap-4">
           <div className="flex items-center gap-3">
@@ -109,6 +115,40 @@ const GenericDetails = () => {
             )
         )}
       </div>
+      {formData?.availableBrands?.length > 0 && (
+        <div className="w-full max-w-[35%] mx-auto px-4">
+          <div className="flex items-center gap-6">
+            <h2 className="text-xl font-semibold text-slate-800">
+              Available Brands Name
+            </h2>
+            <Link
+              to="/brands-allophathic"
+              className="bg-[#34d399] hover:bg-[#2fb386] text-white text-sm px-5 py-2.5 rounded-md shadow-md transition flex items-center gap-2"
+            >
+              View All
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+            {formData.availableBrands?.map((item, index) => (
+              <Link
+                to={`/brands/${item?._id}`}
+                key={index}
+                className="group p-2 hover:bg-tertiary rounded-md hover:text-white cursor-pointer"
+              >
+                <div className="flex items-center gap-1">
+                  <CiTablets1 size={24} />{" "}
+                  <p className="font-semibold text-lg">{item.name}</p>
+                </div>
+
+                <p className="text-sm">{item?.manufacturer?.name}</p>
+                <p className="text-sm text-tertiary group-hover:text-white">
+                  Unit Price: {item?.totalPrice}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -9,11 +9,10 @@ import { deleteFromCloudinary } from "../utils/deleteDataFromCloudinary.js";
 
 export const createGeneric = async (req, res) => {
   try {
-    const { name, } = req.body;
+    const { name } = req.body;
     if (!name || name.trim() === "") {
       return sendResponse(res, 400, false, "Generic name is required", null);
     }
-
 
     const data = {
       ...req.body,
@@ -28,7 +27,13 @@ export const createGeneric = async (req, res) => {
           req.body.availableBrands = JSON.parse(req.body.availableBrands);
         }
       } catch (err) {
-        return sendResponse(res, 400, false, "Invalid availableBrands format", null);
+        return sendResponse(
+          res,
+          400,
+          false,
+          "Invalid availableBrands format",
+          null
+        );
       }
     }
 
@@ -173,8 +178,8 @@ export const getGenericById = async (req, res) => {
     const generic = await Generic.findById(id).populate({
       path: "availableBrands",
       select: "name strength packSize totalPrice manufacturer",
-      populate: { path: "manufacturer", select: "name" }
-    })
+      populate: { path: "manufacturer", select: "name" },
+    });
     if (!generic) {
       return sendResponse(res, 404, false, "Generic not found", null);
     }
@@ -201,6 +206,7 @@ export const getGenericById = async (req, res) => {
 export const updateGeneric = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(req.body);
 
     if (!mongoose.isValidObjectId(id)) {
       return sendResponse(res, 400, false, "Invalid ID", null);
@@ -222,7 +228,13 @@ export const updateGeneric = async (req, res) => {
           req.body.availableBrands = JSON.parse(req.body.availableBrands);
         }
       } catch (err) {
-        return sendResponse(res, 400, false, "Invalid availableBrands format", null);
+        return sendResponse(
+          res,
+          400,
+          false,
+          "Invalid availableBrands format",
+          null
+        );
       }
     }
 
@@ -242,7 +254,10 @@ export const updateGeneric = async (req, res) => {
 
       const file = req?.files?.file?.[0];
       if (file) {
-        const fileUrl = await uploadFileToCloudinary(file.buffer, file.originalname);
+        const fileUrl = await uploadFileToCloudinary(
+          file.buffer,
+          file.originalname
+        );
         if (fileUrl) {
           if (existingGeneric.innovatorMonograph) {
             await deleteFromCloudinary(existingGeneric.innovatorMonograph);
@@ -278,7 +293,6 @@ export const updateGeneric = async (req, res) => {
     );
   }
 };
-
 
 export const deleteGeneric = async (req, res) => {
   try {
