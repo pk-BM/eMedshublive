@@ -11,6 +11,10 @@ export const CreateGeneric = async (formData) => {
       fd.append(key, JSON.stringify(formData[key]));
       continue;
     }
+    if (key === "otherCombinations") {
+      fd.append(key, JSON.stringify(formData[key]));
+      continue;
+    }
 
     // images / files
     if (formData[key] instanceof File) {
@@ -55,6 +59,11 @@ export const UpdateGeneric = async (id, formData) => {
 
     // SAME FIX → stringify brands array
     if (key === "availableBrands") {
+      fd.append(key, JSON.stringify(formData[key]));
+      continue;
+    }
+
+    if (key === "otherCombinations") {
       fd.append(key, JSON.stringify(formData[key]));
       continue;
     }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
-import { GetGenericById, UpdateGeneric } from "../../../lib/APIs/genericAPI";
+import { GetGenericById, GetGenerics, UpdateGeneric } from "../../../lib/APIs/genericAPI";
 import { GetAllBrands } from "../../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
 
@@ -28,6 +28,11 @@ const AdminUpdateGenerics = () => {
   const [formData, setFormData] = useState(null);
   const [allBrandsData, setAllBrandsData] = useState([]);
   const [searchBrand, setSearchBrand] = useState("");
+
+  const [otherCombinationsData, setOtherCombinationsData] = useState([]);
+  const [searchOtherCombinations, setSearchOtherCombinations] = useState("");
+
+
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
@@ -59,6 +64,9 @@ const AdminUpdateGenerics = () => {
           availableBrands: (fetchedData.availableBrands || []).map(
             (b) => b._id
           ),
+          otherCombinations: (fetchedData.otherCombinations || []).map(
+            (b) => b._id
+          ),
         });
 
         setPreviewImage(fetchedData.structureImage || null);
@@ -85,6 +93,24 @@ const AdminUpdateGenerics = () => {
     };
     fetchAllBrands();
   }, []);
+
+  useEffect(() => {
+    const fetchAllOtherCombinations = async () => {
+      try {
+        const response = await GetGenerics();
+        setOtherCombinationsData(response.data);
+
+        // prefill if needed
+        setFormData((prev) => ({
+          ...prev,
+          otherCombinations: [],
+        }));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllOtherCombinations()
+  }, [])
 
   // Handle text, file, checkbox changes
   const handleChange = (e) => {
@@ -119,6 +145,18 @@ const AdminUpdateGenerics = () => {
     });
   };
 
+  const toggleOtherCombinations = (id) => {
+    setFormData((prev) => {
+      const isSelected = prev.otherCombinations.includes(id);
+      return {
+        ...prev,
+        otherCombinations: isSelected
+          ? prev.otherCombinations.filter((b) => b !== id)
+          : [...prev.otherCombinations, id],
+      };
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData) return;
@@ -140,6 +178,9 @@ const AdminUpdateGenerics = () => {
   const filteredBrands = allBrandsData.filter((b) =>
     b.name.toLowerCase().includes(searchBrand.toLowerCase())
   );
+
+  const filteredOtherCombinations = otherCombinationsData.filter((b) => b.name.toLowerCase().includes(searchOtherCombinations.toLowerCase()));
+
 
   if (dataLoading) {
     return (
@@ -271,6 +312,47 @@ const AdminUpdateGenerics = () => {
               Selected: {formData.availableBrands.length}
             </p>
           </div>
+
+          {/* Other Combinations - CUSTOM MULTI SELECT */}
+          <div>
+            <label className="block text-black font-medium mb-2">Other Combinations</label>
+
+            {/* Search Bar */}
+            <input
+              type="text"
+              placeholder="Search other combinations ..."
+              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black"
+              value={searchOtherCombinations}
+              onChange={(e) => setSearchOtherCombinations(e.target.value)}
+            />
+
+            {/* Scrollable List */}
+            <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
+              {filteredOtherCombinations.length === 0 ? (
+                <p className="text-gray-500 text-sm">No other combinations found</p>
+              ) : (
+                filteredOtherCombinations.map((generic) => (
+                  <label
+                    key={generic._id}
+                    className="flex items-center gap-3 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={formData.otherCombinations.includes(generic._id)}
+                      onChange={() => toggleOtherCombinations(generic._id)}
+                    />
+                    <span className="text-black">{generic.name}</span>
+                  </label>
+                ))
+              )}
+            </div>
+
+            <p className="text-gray-600 text-sm mt-2">
+              Selected: {formData.otherCombinations.length}
+            </p>
+          </div>
+
 
           {/* Therapeutic Class */}
           <div>

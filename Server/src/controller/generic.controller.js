@@ -36,8 +36,26 @@ export const createGeneric = async (req, res) => {
         );
       }
     }
+    if (req.body.otherCombinations) {
+      try {
+        if (Array.isArray(req.body.otherCombinations)) {
+          req.body.otherCombinations = JSON.parse(req.body.otherCombinations[0]);
+        } else {
+          req.body.otherCombinations = JSON.parse(req.body.otherCombinations);
+        }
+      } catch (err) {
+        return sendResponse(
+          res,
+          400,
+          false,
+          "Invalid otherCombinations format",
+          null
+        );
+      }
+    }
 
     data.availableBrands = req.body.availableBrands;
+    data.otherCombinations = req.body.otherCombinations;
 
     // Handle optional image and file uploads
     if (req.files) {
@@ -179,7 +197,7 @@ export const getGenericById = async (req, res) => {
       path: "availableBrands",
       select: "name strength packSize totalPrice manufacturer",
       populate: { path: "manufacturer", select: "name" },
-    });
+    }).populate({ path: "otherCombinations", select: "name" });
     if (!generic) {
       return sendResponse(res, 404, false, "Generic not found", null);
     }
@@ -231,6 +249,23 @@ export const updateGeneric = async (req, res) => {
           400,
           false,
           "Invalid availableBrands format",
+          null
+        );
+      }
+    }
+    if (req.body.otherCombinations) {
+      try {
+        if (Array.isArray(req.body.otherCombinations)) {
+          req.body.otherCombinations = JSON.parse(req.body.otherCombinations[0]);
+        } else {
+          req.body.otherCombinations = JSON.parse(req.body.otherCombinations);
+        }
+      } catch (err) {
+        return sendResponse(
+          res,
+          400,
+          false,
+          "Invalid otherCombinations format",
           null
         );
       }

@@ -24,6 +24,13 @@ const genericSchema = new mongoose.Schema(
         required: false
       }
     ],
+    otherCombinations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Generic",
+        required: false
+      }
+    ],
     indication: {
       type: String,
     },
