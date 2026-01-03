@@ -1,8 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { CreateGeneric, GetGenerics } from "../../../lib/APIs/genericAPI";
 import { toast } from "react-toastify";
 import { GetAllBrands } from "../../../lib/APIs/brandsAPI";
+
+const RenderTextarea = ({ name, label, value, onChange }) => (
+  <div>
+    <label className="block text-black font-medium mb-2">{label}</label>
+    <textarea
+      name={name}
+      value={value}
+      onInput={onChange}
+      rows={6}
+      className="w-full border border-gray-300 rounded-lg p-3 text-black bg-white"
+    ></textarea>
+  </div>
+);
 
 const AdminCreateGeneric = () => {
   const [allBrandsData, setAllBrandsData] = useState([]);
@@ -27,7 +40,7 @@ const AdminCreateGeneric = () => {
     therapeuticClass: "",
     storageCondition: "",
     availableBrands: [], // array of brand IDs
-    otherCombinations: []
+    otherCombinations: [],
   });
 
   const [previewImage, setPreviewImage] = useState(null);
@@ -36,7 +49,7 @@ const AdminCreateGeneric = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value, type, files } = e.target;
 
     if (type === "file") {
@@ -53,7 +66,7 @@ const AdminCreateGeneric = () => {
     }
 
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
   const toggleBrand = (id) => {
     setFormData((prev) => {
@@ -93,18 +106,7 @@ const AdminCreateGeneric = () => {
   };
 
   // Custom Textarea Component
-  const RenderTextarea = ({ name, label }) => (
-    <div>
-      <label className="block text-black font-medium mb-2">{label}</label>
-      <textarea
-        name={name}
-        value={formData[name]}
-        onChange={handleChange}
-        rows={6}
-        className="w-full border border-gray-300 rounded-lg p-3 text-black bg-white"
-      ></textarea>
-    </div>
-  );
+  // Moved outside component
 
   const fetchAllBrands = async () => {
     try {
@@ -137,14 +139,16 @@ const AdminCreateGeneric = () => {
 
   useEffect(() => {
     fetchAllBrands();
-    fetchAllOtherCombinations()
+    fetchAllOtherCombinations();
   }, []);
 
   const filteredBrands = allBrandsData.filter((b) =>
     b.name.toLowerCase().includes(searchBrand.toLowerCase())
   );
 
-  const filteredOtherCombinations = otherCombinationsData.filter((b) => b.name.toLowerCase().includes(searchOtherCombinations.toLowerCase()));
+  const filteredOtherCombinations = otherCombinationsData.filter((b) =>
+    b.name.toLowerCase().includes(searchOtherCombinations.toLowerCase())
+  );
 
   return (
     <div className="w-full min-h-screen flex justify-center bg-gray-100">
@@ -154,7 +158,6 @@ const AdminCreateGeneric = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-
           {/* Name */}
           <div>
             <label className="block text-black font-medium mb-2">Name</label>
@@ -170,7 +173,6 @@ const AdminCreateGeneric = () => {
 
           {/* PDF + Image */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             {/* PDF */}
             <div>
               <label className="block text-black font-medium mb-2">
@@ -273,10 +275,11 @@ const AdminCreateGeneric = () => {
 
           {/* ---------------- */}
 
-
           {/* Other Combinations - CUSTOM MULTI SELECT */}
           <div>
-            <label className="block text-black font-medium mb-2">Other Combinations</label>
+            <label className="block text-black font-medium mb-2">
+              Other Combinations
+            </label>
 
             {/* Search Bar */}
             <input
@@ -290,7 +293,9 @@ const AdminCreateGeneric = () => {
             {/* Scrollable List */}
             <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
               {filteredOtherCombinations.length === 0 ? (
-                <p className="text-gray-500 text-sm">No other combinations found</p>
+                <p className="text-gray-500 text-sm">
+                  No other combinations found
+                </p>
               ) : (
                 filteredOtherCombinations.map((generic) => (
                   <label
@@ -331,21 +336,60 @@ const AdminCreateGeneric = () => {
           </div>
 
           {/* TEXTAREAS */}
-          <RenderTextarea name="indication" label="Indication" />
-          <RenderTextarea name="pharmacology" label="Pharmacology" />
+          <RenderTextarea
+            name="indication"
+            label="Indication"
+            value={formData.indication}
+            onChange={handleChange}
+          />
+          <RenderTextarea
+            name="pharmacology"
+            label="Pharmacology"
+            value={formData.pharmacology}
+            onChange={handleChange}
+          />
           <RenderTextarea
             name="dosageAndAdministration"
             label="Dosage and Administration"
+            value={formData.dosageAndAdministration}
+            onChange={handleChange}
           />
-          <RenderTextarea name="interaction" label="Interaction" />
-          <RenderTextarea name="contraindication" label="Contraindication" />
-          <RenderTextarea name="sideEffect" label="Side Effect" />
+          <RenderTextarea
+            name="interaction"
+            label="Interaction"
+            value={formData.interaction}
+            onChange={handleChange}
+          />
+          <RenderTextarea
+            name="contraindication"
+            label="Contraindication"
+            value={formData.contraindication}
+            onChange={handleChange}
+          />
+          <RenderTextarea
+            name="sideEffect"
+            label="Side Effect"
+            value={formData.sideEffect}
+            onChange={handleChange}
+          />
           <RenderTextarea
             name="pregnancyAndLactation"
             label="Pregnancy and Lactation"
+            value={formData.pregnancyAndLactation}
+            onChange={handleChange}
           />
-          <RenderTextarea name="overdoseEffect" label="Overdose Effect" />
-          <RenderTextarea name="storageCondition" label="Storage Condition" />
+          <RenderTextarea
+            name="overdoseEffect"
+            label="Overdose Effect"
+            value={formData.overdoseEffect}
+            onChange={handleChange}
+          />
+          <RenderTextarea
+            name="storageCondition"
+            label="Storage Condition"
+            value={formData.storageCondition}
+            onChange={handleChange}
+          />
 
           {/* Submit */}
           <div className="flex justify-end mt-4">

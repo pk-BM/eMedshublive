@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
-import { GetGenericById, GetGenerics, UpdateGeneric } from "../../../lib/APIs/genericAPI";
+import {
+  GetGenericById,
+  GetGenerics,
+  UpdateGeneric,
+} from "../../../lib/APIs/genericAPI";
 import { GetAllBrands } from "../../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
 
@@ -12,9 +16,9 @@ const TextAreaField = React.memo(({ field, label, value, onChange }) => {
       <textarea
         name={field}
         value={value}
-        onChange={(e) => onChange(field, e.target.value)}
+        onInput={(e) => onChange(field, e.target.value)}
         rows={6}
-        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black bg-white"
+        className="w-full border border-gray-300 rounded-lg p-3 text-black bg-white"
       />
     </div>
   );
@@ -31,7 +35,6 @@ const AdminUpdateGenerics = () => {
 
   const [otherCombinationsData, setOtherCombinationsData] = useState([]);
   const [searchOtherCombinations, setSearchOtherCombinations] = useState("");
-
 
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -109,8 +112,8 @@ const AdminUpdateGenerics = () => {
         console.log(error);
       }
     };
-    fetchAllOtherCombinations()
-  }, [])
+    fetchAllOtherCombinations();
+  }, []);
 
   // Handle text, file, checkbox changes
   const handleChange = (e) => {
@@ -179,8 +182,9 @@ const AdminUpdateGenerics = () => {
     b.name.toLowerCase().includes(searchBrand.toLowerCase())
   );
 
-  const filteredOtherCombinations = otherCombinationsData.filter((b) => b.name.toLowerCase().includes(searchOtherCombinations.toLowerCase()));
-
+  const filteredOtherCombinations = otherCombinationsData.filter((b) =>
+    b.name.toLowerCase().includes(searchOtherCombinations.toLowerCase())
+  );
 
   if (dataLoading) {
     return (
@@ -315,7 +319,9 @@ const AdminUpdateGenerics = () => {
 
           {/* Other Combinations - CUSTOM MULTI SELECT */}
           <div>
-            <label className="block text-black font-medium mb-2">Other Combinations</label>
+            <label className="block text-black font-medium mb-2">
+              Other Combinations
+            </label>
 
             {/* Search Bar */}
             <input
@@ -329,7 +335,9 @@ const AdminUpdateGenerics = () => {
             {/* Scrollable List */}
             <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
               {filteredOtherCombinations.length === 0 ? (
-                <p className="text-gray-500 text-sm">No other combinations found</p>
+                <p className="text-gray-500 text-sm">
+                  No other combinations found
+                </p>
               ) : (
                 filteredOtherCombinations.map((generic) => (
                   <label
@@ -352,7 +360,6 @@ const AdminUpdateGenerics = () => {
               Selected: {formData.otherCombinations.length}
             </p>
           </div>
-
 
           {/* Therapeutic Class */}
           <div>
