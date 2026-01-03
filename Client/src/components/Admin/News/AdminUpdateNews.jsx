@@ -1,7 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router";
 import { GetNewsById, UpdateNews } from "../../../lib/APIs/newsAPI";
 import { toast } from "react-toastify";
+import { useQuill } from "react-quilljs";
+import "quill/dist/quill.snow.css";
+
+// ----------- RICH TEXT EDITOR COMPONENT -----------
+const RichTextEditor = React.memo(({ label, value, onChange }) => {
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+      [{ color: [] }, { background: [] }],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "indent",
+    "color",
+    "background",
+  ];
+
+  const { quill, quillRef } = useQuill({ modules, formats, theme: "snow" });
+
+  useEffect(() => {
+    if (quill) {
+      // Set initial content
+      if (value && quill.root.innerHTML !== value) {
+        quill.root.innerHTML = value;
+      }
+
+      // Handle text changes
+      quill.on("text-change", () => {
+        const html = quill.root.innerHTML;
+        onChange(html === "<p><br></p>" ? "" : html);
+      });
+    }
+  }, [quill, onChange, value]);
+
+  return (
+    <div className="mb-6">
+      <label className="block mb-2 text-gray-700 font-medium">{label}</label>
+      <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
+        <div ref={quillRef} className="min-h-[200px]" />
+      </div>
+    </div>
+  );
+});
+// ----------------------------------------------------------------
 
 const AdminUpdateNews = () => {
   const { id } = useParams();
@@ -20,7 +76,7 @@ const AdminUpdateNews = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
 
-  // 🔹 Fetch the news item
+  // Fetch the news item
   const fetchNews = async () => {
     try {
       setFetching(true);
@@ -52,7 +108,7 @@ const AdminUpdateNews = () => {
     fetchNews();
   }, [id]);
 
-  // 🔹 Handle form input changes
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
@@ -68,7 +124,12 @@ const AdminUpdateNews = () => {
     }
   };
 
-  // 🔹 Submit update
+  // Handle rich text editor changes
+  const handleDescriptionChange = useCallback((value) => {
+    setFormData((prev) => ({ ...prev, description: value }));
+  }, []);
+
+  // Submit update
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -87,8 +148,11 @@ const AdminUpdateNews = () => {
 
   if (fetching) {
     return (
-      <div className="w-full h-screen flex justify-center items-center text-lg font-medium text-gray-600">
-        Loading news data...
+      <div className="w-full h-screen flex justify-center items-center bg-gray-100">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-gray-300 border-t-bg rounded-full animate-spin"></div>
+          <p className="text-lg font-medium text-gray-600">Loading news data...</p>
+        </div>
       </div>
     );
   }
@@ -110,7 +174,7 @@ const AdminUpdateNews = () => {
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter news title"
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
               required
             />
           </div>
@@ -125,34 +189,25 @@ const AdminUpdateNews = () => {
               accept="image/*"
               name="image"
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all duration-200"
             />
             {preview && (
-              <div className="mt-4">
+              <div className="mt-4 p-2 border border-gray-200 rounded-lg bg-gray-50">
                 <img
                   src={preview}
                   alt="Preview"
-                  className="w-full max-h-64 object-cover rounded-lg border border-gray-300"
+                  className="w-full max-h-64 object-cover rounded-lg"
                 />
               </div>
             )}
           </div>
 
-          {/* Description */}
-          <div>
-            <label className="block text-black font-medium mb-2">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Edit your news content here..."
-              rows={10}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black resize-none bg-white"
-              required
-            ></textarea>
-          </div>
+          {/* Description - Rich Text Editor */}
+          <RichTextEditor
+            label="Description"
+            value={formData.description}
+            onChange={handleDescriptionChange}
+          />
 
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -165,7 +220,7 @@ const AdminUpdateNews = () => {
                 name="publishDate"
                 value={formData.publishDate}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
                 required
               />
             </div>
@@ -179,35 +234,45 @@ const AdminUpdateNews = () => {
                 name="unpublishDate"
                 value={formData.unpublishDate}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
                 required
               />
             </div>
           </div>
 
-          {/* Status */}
-          <div>
-            <label className="block text-black font-medium mb-2">Status</label>
-            <select
-              name="isActive"
-              value={formData.isActive}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black bg-white"
-              required
-            >
-              <option value={true}>Active</option>
-              <option value={false}>Inactive</option>
-            </select>
+          {/* Status Toggle */}
+          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.isActive}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, isActive: e.target.checked }))
+                }
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-bg rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+            </label>
+            <span className="text-black font-medium">
+              {formData.isActive ? "Active" : "Inactive"}
+            </span>
           </div>
 
           {/* Submit */}
           <div className="flex justify-end mt-8">
             <button
               type="submit"
-              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
+              className="bg-bg text-white py-3 px-8 rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
               disabled={loading}
             >
-              {loading ? "Updating..." : "Update News"}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Updating...
+                </span>
+              ) : (
+                "Update News"
+              )}
             </button>
           </div>
         </form>

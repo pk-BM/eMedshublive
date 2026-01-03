@@ -31,7 +31,7 @@ const AdminCreateBrand = () => {
   const [genericOptions, setGenericOptions] = useState([]);
   const [manufacturerOptions, setManufacturerOptions] = useState([]);
 
-  // dropdown options ka data fetch
+  // Fetch dropdown options
   const fetchDropdownData = async () => {
     try {
       setFetchingOptions(true);
@@ -85,7 +85,7 @@ const AdminCreateBrand = () => {
     }
   };
 
-  // options k liye loading and empty checks
+  // Render options for select dropdowns
   const renderOptions = (data, label) => {
     if (fetchingOptions) return <option>Loading {label}...</option>;
     if (!data.length) return <option>No {label} available</option>;
@@ -99,232 +99,263 @@ const AdminCreateBrand = () => {
 
   return (
     <div className="w-full min-h-screen flex justify-center bg-gray-100">
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8 my-10 border border-gray-200">
+      <div className="w-full max-w-4xl bg-white shadow-lg rounded-2xl p-8 my-10 border border-gray-200">
         <h1 className="text-3xl font-semibold text-black mb-8 border-b-2 border-tertiary pb-2">
           Create Brand
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Product Type
-              </label>
-              <input
-                type="text"
-                name="productType"
-                value={formData.productType}
-                onChange={handleChange}
-                placeholder="Enter product type"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-                required
-              />
-            </div>
+          {/* Section: Basic Info */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Basic Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Product Type
+                </label>
+                <input
+                  type="text"
+                  name="productType"
+                  value={formData.productType}
+                  onChange={handleChange}
+                  placeholder="Enter product type"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                  required
+                />
+              </div>
 
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Brand Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter brand name"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-                required
-              />
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Brand Name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter brand name"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                  required
+                />
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+          {/* Section: Classification */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Classification</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Generic
+                </label>
+                <select
+                  name="generic"
+                  value={formData.generic}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+                  required
+                >
+                  <option value="">Select Generic</option>
+                  {renderOptions(genericOptions, "Generics")}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Allopathic or Herbal
+                </label>
+                <select
+                  name="allopathicOrHerbal"
+                  value={formData.allopathicOrHerbal}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+                  required
+                >
+                  <option value="">Select Type</option>
+                  <option value="Allopathic">Allopathic</option>
+                  <option value="Herbal">Herbal</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-6">
               <label className="block text-black font-medium mb-2">
-                Generic
+                Manufacturer
               </label>
               <select
-                name="generic"
-                value={formData.generic}
+                name="manufacturer"
+                value={formData.manufacturer}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
                 required
               >
-                <option value="">Select Generic</option>
-                {renderOptions(genericOptions, "Generics")}
+                <option value="">Select Manufacturer</option>
+                {renderOptions(manufacturerOptions, "Manufacturers")}
               </select>
             </div>
 
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Allopathic or Herbal
-              </label>
-              <select
-                name="allopathicOrHerbal"
-                value={formData.allopathicOrHerbal}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-                required
-              >
-                <option value="">Select Type</option>
-                <option value="Allopathic">Allopathic</option>
-                <option value="Herbal">Herbal</option>
-              </select>
-            </div>
-          </div>
-          <div className="w-full">
-            <label className="block text-black font-medium mb-2">
-              Manufacturer
-            </label>
-            <select
-              name="manufacturer"
-              value={formData.manufacturer}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              required
-            >
-              <option value="">Select Manufacturer</option>
-              {renderOptions(manufacturerOptions, "Manufacturers")}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-black font-medium mb-2">
-                New Product
-              </label>
-              <select
-                name="newProduct"
-                value={formData.newProduct}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-                required
-              >
-                <option value="">Select</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Bioequivalent Drug
-              </label>
-              <select
-                name="bioequivalentDrug"
-                value={formData.bioequivalentDrug}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-                required
-              >
-                <option value="">Select</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Dosage Form
-              </label>
-              <input
-                type="text"
-                name="dosageForm"
-                value={formData.dosageForm}
-                onChange={handleChange}
-                placeholder="e.g. Tablet"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              />
-            </div>
-
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Strength
-              </label>
-              <input
-                type="text"
-                name="strength"
-                value={formData.strength}
-                onChange={handleChange}
-                placeholder="e.g. 500mg"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              />
-            </div>
-
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Pack Size
-              </label>
-              <input
-                type="text"
-                name="packSize"
-                value={formData.packSize}
-                onChange={handleChange}
-                placeholder="e.g. 10 tablets"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  New Product
+                </label>
+                <select
+                  name="newProduct"
+                  value={formData.newProduct}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+                  required
+                >
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Bioequivalent Drug
+                </label>
+                <select
+                  name="bioequivalentDrug"
+                  value={formData.bioequivalentDrug}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+                  required
+                >
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Unit Price
-              </label>
-              <input
-                type="number"
-                name="unitPrice"
-                value={formData.unitPrice}
-                onChange={handleChange}
-                placeholder="Enter unit price"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              />
-            </div>
+          {/* Section: Product Details */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Product Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Dosage Form
+                </label>
+                <input
+                  type="text"
+                  name="dosageForm"
+                  value={formData.dosageForm}
+                  onChange={handleChange}
+                  placeholder="e.g. Tablet"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                />
+              </div>
 
-            <div>
-              <label className="block text-black font-medium mb-2">
-                Total Price
-              </label>
-              <input
-                type="number"
-                name="totalPrice"
-                value={formData.totalPrice}
-                onChange={handleChange}
-                placeholder="Enter total price"
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              />
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Strength
+                </label>
+                <input
+                  type="text"
+                  name="strength"
+                  value={formData.strength}
+                  onChange={handleChange}
+                  placeholder="e.g. 500mg"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                />
+              </div>
+
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Pack Size
+                </label>
+                <input
+                  type="text"
+                  name="packSize"
+                  value={formData.packSize}
+                  onChange={handleChange}
+                  placeholder="e.g. 10 tablets"
+                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                />
+              </div>
             </div>
           </div>
 
-          <div>
-            <label className="block text-black font-medium mb-2">
-              Pack Image
-            </label>
+          {/* Section: Pricing */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Pricing</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Unit Price
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rs.</span>
+                  <input
+                    type="number"
+                    name="unitPrice"
+                    value={formData.unitPrice}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                    className="w-full border border-gray-300 rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-black font-medium mb-2">
+                  Total Price
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">Rs.</span>
+                  <input
+                    type="number"
+                    name="totalPrice"
+                    value={formData.totalPrice}
+                    onChange={handleChange}
+                    placeholder="0.00"
+                    className="w-full border border-gray-300 rounded-lg p-3 pl-10 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section: Image Upload */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Pack Image</h2>
             <input
               type="file"
               accept="image/*"
               name="packImage"
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all duration-200 bg-white"
               required
             />
             {preview && (
-              <div className="mt-4">
+              <div className="mt-4 p-2 border border-gray-200 rounded-lg bg-white">
                 <img
                   src={preview}
                   alt="Preview"
-                  className="w-full max-h-64 object-cover rounded-lg border border-gray-300"
+                  className="w-full max-h-64 object-contain rounded-lg"
                 />
               </div>
             )}
           </div>
 
-          <div className="flex justify-end mt-8">
+          {/* Submit */}
+          <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
+              className="bg-bg text-white py-3 px-8 rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
               disabled={loading}
             >
-              {loading ? "Creating..." : "Create Brand"}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Creating...
+                </span>
+              ) : (
+                "Create Brand"
+              )}
             </button>
           </div>
         </form>

@@ -1,8 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import { UpdateTest, GetTestById } from "../../../lib/APIs/testAPI";
 import { TrustedCenterOptions } from "../../../lib/APIs/TrustedCenterAPI";
+import { useQuill } from "react-quilljs";
+import "quill/dist/quill.snow.css";
+
+// ----------- RICH TEXT EDITOR COMPONENT -----------
+const RichTextEditor = React.memo(({ label, value, onChange }) => {
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ indent: "-1" }, { indent: "+1" }],
+      [{ color: [] }, { background: [] }],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "indent",
+    "color",
+    "background",
+  ];
+
+  const { quill, quillRef } = useQuill({ modules, formats, theme: "snow" });
+
+  useEffect(() => {
+    if (quill) {
+      if (value && quill.root.innerHTML !== value) {
+        quill.root.innerHTML = value;
+      }
+
+      quill.on("text-change", () => {
+        const html = quill.root.innerHTML;
+        onChange(html === "<p><br></p>" ? "" : html);
+      });
+    }
+  }, [quill, onChange, value]);
+
+  return (
+    <div className="mb-6">
+      <label className="block mb-2 text-gray-700 font-medium">{label}</label>
+      <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
+        <div ref={quillRef} className="min-h-[200px]" />
+      </div>
+    </div>
+  );
+});
+// ----------------------------------------------------------------
 
 const AdminUpdateTest = () => {
   const { id } = useParams();
@@ -17,11 +71,10 @@ const AdminUpdateTest = () => {
 
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [fetchingOptions, setFetchingOptions] = useState(false);
   const [trustedCenterOptions, setTrustedCenterOptions] = useState([]);
   const [search, setSearch] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   // Fetch Trusted Centers
   const fetchTrustedCenters = async () => {
@@ -43,7 +96,7 @@ const AdminUpdateTest = () => {
   useEffect(() => {
     const fetchTest = async () => {
       try {
-        setLoading(true);
+        setFetching(true);
         const res = await GetTestById(id);
         const data = res.data || res;
 
@@ -54,12 +107,12 @@ const AdminUpdateTest = () => {
           trustedCenters: data.trustedCenters?.map((tc) => tc) || [],
         });
 
-        setPreview(data.imageURL || null);
+        setPreview(data.image || null);
       } catch (err) {
         console.error(err);
-        setErrorMessage("Failed to load medical test details.");
+        toast.error("Failed to load medical test details.");
       } finally {
-        setLoading(false);
+        setFetching(false);
       }
     };
 
@@ -79,6 +132,11 @@ const AdminUpdateTest = () => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
+
+  // Handle rich text editor changes
+  const handleDescriptionChange = useCallback((value) => {
+    setFormData((prev) => ({ ...prev, description: value }));
+  }, []);
 
   // Toggle center selection
   const toggleCenter = (id) => {
@@ -102,8 +160,6 @@ const AdminUpdateTest = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      setErrorMessage("");
-      setSuccessMessage("");
 
       const data = new FormData();
       data.append("name", formData.name);
@@ -112,85 +168,97 @@ const AdminUpdateTest = () => {
       if (formData.image) data.append("image", formData.image);
 
       const response = await UpdateTest(id, data);
-
-      setSuccessMessage(
-        response.message || "Medical Test updated successfully!"
-      );
       toast.success(response.message || "Medical Test updated successfully!");
       setTimeout(() => navigate("/admin/medical-test"), 600);
     } catch (error) {
       console.error(error);
-      setErrorMessage(
-        error.response?.data?.message || "Failed to update medical test."
-      );
+      toast.error(error.response?.data?.message || "Failed to update medical test.");
     } finally {
       setLoading(false);
     }
   };
 
+  if (fetching) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-gray-300 border-t-bg rounded-full animate-spin"></div>
+          <p className="text-lg font-medium text-gray-600">Loading medical test data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen flex justify-center bg-gray-100">
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-8 my-10 border border-gray-200">
+      <div className="w-full max-w-4xl bg-white shadow-lg rounded-2xl p-8 my-10 border border-gray-200">
         <h1 className="text-3xl font-semibold text-black mb-8 border-b-2 border-tertiary pb-2">
           Update Medical Test
         </h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          {/* Name */}
-          <div>
-            <label className="block text-black font-medium mb-2">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter medical test name"
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
-              required
-            />
+          {/* Section: Basic Info */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Basic Information</h2>
+
+            {/* Name */}
+            <div>
+              <label className="block text-black font-medium mb-2">Test Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter medical test name"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+                required
+              />
+            </div>
           </div>
 
-          {/* Description */}
-          <div>
-            <label className="block text-black font-medium mb-2">
-              Description
-            </label>
-            <textarea
-              name="description"
+          {/* Section: Description */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Description</h2>
+            <RichTextEditor
+              label=""
               value={formData.description}
-              onChange={handleChange}
-              rows={6}
-              placeholder="Enter description..."
-              className="w-full border border-gray-300 rounded-lg p-3 text-black focus:outline-none resize-y"
-              required
+              onChange={handleDescriptionChange}
             />
           </div>
 
-          {/* Trusted Centers */}
-          <div>
-            <label className="block text-black font-medium mb-2">
-              Trusted Centers
-            </label>
+          {/* Section: Trusted Centers */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Trusted Centers</h2>
+
             <input
               type="text"
               placeholder="Search center..."
-              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black"
+              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent transition-all duration-200"
+              value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
+
+            <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-white">
               {fetchingOptions ? (
-                <p className="text-gray-500">Loading centers...</p>
+                <div className="flex items-center justify-center py-4">
+                  <div className="w-6 h-6 border-2 border-gray-300 border-t-bg rounded-full animate-spin"></div>
+                  <span className="ml-2 text-gray-500">Loading centers...</span>
+                </div>
               ) : filteredCenters.length === 0 ? (
-                <p className="text-gray-500 text-sm">No centers found</p>
+                <p className="text-gray-500 text-sm py-2 text-center">No centers found</p>
               ) : (
                 filteredCenters.map((center) => (
                   <label
                     key={center._id}
-                    className="flex items-center gap-3 cursor-pointer"
+                    className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-200 ${
+                      formData.trustedCenters.includes(center._id)
+                        ? "bg-blue-50 border border-blue-200"
+                        : "hover:bg-gray-100"
+                    }`}
                   >
                     <input
                       type="checkbox"
-                      className="w-4 h-4"
+                      className="w-4 h-4 accent-bg"
                       checked={formData.trustedCenters.includes(center._id)}
                       onChange={() => toggleCenter(center._id)}
                     />
@@ -199,54 +267,50 @@ const AdminUpdateTest = () => {
                 ))
               )}
             </div>
+
             <p className="text-gray-600 text-sm mt-2">
-              Selected: {formData.trustedCenters.length}
+              Selected: <span className="font-medium text-black">{formData.trustedCenters.length}</span>
             </p>
           </div>
 
-          {/* Image */}
-          <div>
-            <label className="block text-black font-medium mb-2">
-              Test Image
-            </label>
+          {/* Section: Image */}
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+            <h2 className="text-lg font-medium text-gray-800 mb-4">Test Image</h2>
+
             <input
               type="file"
               accept="image/*"
               name="image"
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all duration-200 bg-white"
             />
+
             {preview && (
-              <div className="mt-4">
+              <div className="mt-4 p-2 border border-gray-200 rounded-lg bg-white">
                 <img
                   src={preview}
                   alt="Preview"
-                  className="w-full max-h-64 object-cover rounded-lg border border-gray-300"
+                  className="w-full max-h-64 object-contain rounded-lg"
                 />
               </div>
             )}
           </div>
 
-          {/* Messages */}
-          {errorMessage && (
-            <div className="bg-red-100 text-red-600 border border-red-600 p-3 rounded-sm text-sm">
-              {errorMessage}
-            </div>
-          )}
-          {successMessage && (
-            <div className="bg-green-100 text-green-600 border border-green-600 p-3 rounded-sm text-sm">
-              {successMessage}
-            </div>
-          )}
-
           {/* Submit */}
-          <div className="flex justify-end mt-8">
+          <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
+              className="bg-bg text-white py-3 px-8 rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
               disabled={loading}
             >
-              {loading ? "Updating..." : "Update Medical Test"}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Updating...
+                </span>
+              ) : (
+                "Update Medical Test"
+              )}
             </button>
           </div>
         </form>
