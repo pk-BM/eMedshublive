@@ -1,63 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 import { CreateNews } from "../../../lib/APIs/newsAPI";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
-
-// ----------- RICH TEXT EDITOR COMPONENT -----------
-const RichTextEditor = React.memo(({ label, value, onChange }) => {
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-      [{ color: [] }, { background: [] }],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-    "indent",
-    "color",
-    "background",
-  ];
-
-  const { quill, quillRef } = useQuill({ modules, formats, theme: "snow" });
-
-  useEffect(() => {
-    if (quill) {
-      // Set initial content
-      if (value && quill.root.innerHTML !== value) {
-        quill.root.innerHTML = value;
-      }
-
-      // Handle text changes
-      quill.on("text-change", () => {
-        const html = quill.root.innerHTML;
-        onChange(html === "<p><br></p>" ? "" : html);
-      });
-    }
-  }, [quill, onChange, value]);
-
-  return (
-    <div className="mb-6">
-      <label className="block mb-2 text-gray-700 font-medium">{label}</label>
-      <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
-        <div ref={quillRef} className="min-h-[200px]" />
-      </div>
-    </div>
-  );
-});
-// ----------------------------------------------------------------
 
 const AdminCreateNews = () => {
   const [formData, setFormData] = useState({
@@ -87,11 +31,6 @@ const AdminCreateNews = () => {
       }));
     }
   };
-
-  // Handle rich text editor changes
-  const handleDescriptionChange = useCallback((value) => {
-    setFormData((prev) => ({ ...prev, description: value }));
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -126,7 +65,7 @@ const AdminCreateNews = () => {
               value={formData.title}
               onChange={handleChange}
               placeholder="Enter news title"
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
               required
             />
           </div>
@@ -141,26 +80,36 @@ const AdminCreateNews = () => {
               accept="image/*"
               name="image"
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
               required
             />
             {preview && (
-              <div className="mt-4 p-2 border border-gray-200 rounded-lg bg-gray-50">
+              <div className="mt-4">
                 <img
                   src={preview}
                   alt="Preview"
-                  className="w-full max-h-64 object-cover rounded-lg"
+                  className="w-full max-h-64 object-cover rounded-lg border border-gray-300"
                 />
               </div>
             )}
           </div>
 
-          {/* Description - Rich Text Editor */}
-          <RichTextEditor
-            label="Description"
-            value={formData.description}
-            onChange={handleDescriptionChange}
-          />
+          {/* Description */}
+          <div>
+            <label className="block text-black font-medium mb-2">
+              Description
+            </label>
+
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Write your news content here..."
+              rows={10}
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black resize-none bg-white"
+              required
+            ></textarea>
+          </div>
 
           {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -173,7 +122,7 @@ const AdminCreateNews = () => {
                 name="publishDate"
                 value={formData.publishDate}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
                 required
               />
             </div>
@@ -187,7 +136,7 @@ const AdminCreateNews = () => {
                 name="unpublishDate"
                 value={formData.unpublishDate}
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+                className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
                 required
               />
             </div>
@@ -197,17 +146,10 @@ const AdminCreateNews = () => {
           <div className="flex justify-end mt-8">
             <button
               type="submit"
-              className="bg-bg text-white py-3 px-8 rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
+              className="bg-bg text-white py-2 px-6 rounded-lg cursor-pointer"
               disabled={loading}
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Creating...
-                </span>
-              ) : (
-                "Create Post"
-              )}
+              {loading ? "Creating..." : "Create Post"}
             </button>
           </div>
         </form>
