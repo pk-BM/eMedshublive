@@ -3,58 +3,19 @@ import { useParams, useNavigate } from "react-router";
 import { GetGenericById, GetGenerics, UpdateGeneric } from "../../../lib/APIs/genericAPI";
 import { GetAllBrands } from "../../../lib/APIs/brandsAPI";
 import { toast } from "react-toastify";
-import { useQuill } from "react-quilljs";
-import "quill/dist/quill.snow.css";
 
-// ----------- RICH TEXT EDITOR COMPONENT -----------
-const RichTextEditor = React.memo(({ field, label, value, onChange }) => {
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ indent: "-1" }, { indent: "+1" }],
-      [{ color: [] }, { background: [] }],
-      ["clean"],
-    ],
-  };
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "list",
-    "bullet",
-    "indent",
-    "color",
-    "background",
-  ];
-
-  const { quill, quillRef } = useQuill({ modules, formats, theme: "snow" });
-
-  useEffect(() => {
-    if (quill) {
-      // Set initial content
-      if (value && quill.root.innerHTML !== value) {
-        quill.root.innerHTML = value;
-      }
-
-      // Handle text changes
-      quill.on("text-change", () => {
-        const html = quill.root.innerHTML;
-        onChange(field, html === "<p><br></p>" ? "" : html);
-      });
-    }
-  }, [quill, field, onChange, value]);
-
+// ----------- TEXTAREA COMPONENT (instead of Quill) -----------
+const TextAreaField = React.memo(({ field, label, value, onChange }) => {
   return (
     <div className="mb-6">
       <label className="block mb-2 text-gray-700 font-medium">{label}</label>
-      <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
-        <div ref={quillRef} className="min-h-[150px]" />
-      </div>
+      <textarea
+        name={field}
+        value={value}
+        onChange={(e) => onChange(field, e.target.value)}
+        rows={6}
+        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black bg-white"
+      />
     </div>
   );
 });
@@ -166,8 +127,8 @@ const AdminUpdateGenerics = () => {
     }
   };
 
-  // Handle rich text editor changes
-  const handleRichTextChange = useCallback((field, value) => {
+  // Handle textarea changes
+  const handleTextAreaChange = useCallback((field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
@@ -224,10 +185,7 @@ const AdminUpdateGenerics = () => {
   if (dataLoading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-gray-300 border-t-bg rounded-full animate-spin"></div>
-          <p className="text-xl text-gray-600">Loading generic data...</p>
-        </div>
+        <p className="text-xl text-gray-600">Loading generic data...</p>
       </div>
     );
   }
@@ -235,11 +193,9 @@ const AdminUpdateGenerics = () => {
   if (!formData) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="bg-white p-8 rounded-xl shadow-lg border border-red-200">
-          <p className="text-xl text-red-600">
-            Error: Could not load generic data.
-          </p>
-        </div>
+        <p className="text-xl text-red-600">
+          Error: Could not load generic data.
+        </p>
       </div>
     );
   }
@@ -260,7 +216,7 @@ const AdminUpdateGenerics = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
               required
             />
           </div>
@@ -271,15 +227,13 @@ const AdminUpdateGenerics = () => {
               <label className="block text-black font-medium mb-2">
                 Innovator Monograph
               </label>
-              <div className="relative">
-                <input
-                  type="file"
-                  accept="application/*"
-                  name="file"
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all duration-200"
-                />
-              </div>
+              <input
+                type="file"
+                accept="application/*"
+                name="file"
+                onChange={handleChange}
+                className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
+              />
             </div>
 
             <div>
@@ -291,15 +245,15 @@ const AdminUpdateGenerics = () => {
                 accept="image/*"
                 name="image"
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-all duration-200"
+                className="w-full border border-gray-300 rounded-lg p-3 text-black cursor-pointer"
               />
 
               {previewImage && (
-                <div className="mt-4 p-2 border border-gray-200 rounded-lg bg-gray-50">
+                <div className="mt-4">
                   <img
                     src={previewImage}
                     alt="Preview"
-                    className="w-full max-h-48 object-contain rounded-lg"
+                    className="w-full max-h-48 object-contain rounded-lg border"
                   />
                 </div>
               )}
@@ -315,7 +269,7 @@ const AdminUpdateGenerics = () => {
               name="allopathicOrHerbal"
               value={formData.allopathicOrHerbal}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200 cursor-pointer"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
               required
             >
               <option value="">Select Type</option>
@@ -330,26 +284,22 @@ const AdminUpdateGenerics = () => {
             <input
               type="text"
               placeholder="Search brand..."
-              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black"
               value={searchBrand}
               onChange={(e) => setSearchBrand(e.target.value)}
             />
             <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
               {filteredBrands.length === 0 ? (
-                <p className="text-gray-500 text-sm py-2 text-center">No brands found</p>
+                <p className="text-gray-500 text-sm">No brands found</p>
               ) : (
                 filteredBrands.map((brand) => (
                   <label
                     key={brand._id}
-                    className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-200 ${
-                      formData.availableBrands.includes(brand._id)
-                        ? "bg-blue-50 border border-blue-200"
-                        : "hover:bg-gray-100"
-                    }`}
+                    className="flex items-center gap-3 cursor-pointer"
                   >
                     <input
                       type="checkbox"
-                      className="w-4 h-4 accent-bg"
+                      className="w-4 h-4"
                       checked={formData.availableBrands.includes(brand._id)}
                       onChange={() => toggleBrand(brand._id)}
                     />
@@ -359,7 +309,7 @@ const AdminUpdateGenerics = () => {
               )}
             </div>
             <p className="text-gray-600 text-sm mt-2">
-              Selected: <span className="font-medium text-black">{formData.availableBrands.length}</span>
+              Selected: {formData.availableBrands.length}
             </p>
           </div>
 
@@ -371,7 +321,7 @@ const AdminUpdateGenerics = () => {
             <input
               type="text"
               placeholder="Search other combinations ..."
-              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 mb-3 text-black"
               value={searchOtherCombinations}
               onChange={(e) => setSearchOtherCombinations(e.target.value)}
             />
@@ -379,20 +329,16 @@ const AdminUpdateGenerics = () => {
             {/* Scrollable List */}
             <div className="max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-3 space-y-2 bg-gray-50">
               {filteredOtherCombinations.length === 0 ? (
-                <p className="text-gray-500 text-sm py-2 text-center">No other combinations found</p>
+                <p className="text-gray-500 text-sm">No other combinations found</p>
               ) : (
                 filteredOtherCombinations.map((generic) => (
                   <label
                     key={generic._id}
-                    className={`flex items-center gap-3 cursor-pointer p-2 rounded-lg transition-all duration-200 ${
-                      formData.otherCombinations.includes(generic._id)
-                        ? "bg-blue-50 border border-blue-200"
-                        : "hover:bg-gray-100"
-                    }`}
+                    className="flex items-center gap-3 cursor-pointer"
                   >
                     <input
                       type="checkbox"
-                      className="w-4 h-4 accent-bg"
+                      className="w-4 h-4"
                       checked={formData.otherCombinations.includes(generic._id)}
                       onChange={() => toggleOtherCombinations(generic._id)}
                     />
@@ -403,7 +349,7 @@ const AdminUpdateGenerics = () => {
             </div>
 
             <p className="text-gray-600 text-sm mt-2">
-              Selected: <span className="font-medium text-black">{formData.otherCombinations.length}</span>
+              Selected: {formData.otherCombinations.length}
             </p>
           </div>
 
@@ -418,98 +364,88 @@ const AdminUpdateGenerics = () => {
               name="therapeuticClass"
               value={formData.therapeuticClass}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-bg focus:border-transparent text-black transition-all duration-200"
+              className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none text-black"
             />
           </div>
 
-          {/* Rich Text Editors */}
-          <RichTextEditor
+          {/* Text Areas */}
+          <TextAreaField
             field="indication"
             label="Indication"
             value={formData.indication}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="pharmacology"
             label="Pharmacology"
             value={formData.pharmacology}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="dosageAndAdministration"
             label="Dosage and Administration"
             value={formData.dosageAndAdministration}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="interaction"
             label="Interaction"
             value={formData.interaction}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="contraindication"
             label="Contraindication"
             value={formData.contraindication}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="sideEffect"
             label="Side Effect"
             value={formData.sideEffect}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="pregnancyAndLactation"
             label="Pregnancy and Lactation"
             value={formData.pregnancyAndLactation}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="overdoseEffect"
             label="Overdose Effect"
             value={formData.overdoseEffect}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
-          <RichTextEditor
+          <TextAreaField
             field="storageCondition"
             label="Storage Condition"
             value={formData.storageCondition}
-            onChange={handleRichTextChange}
+            onChange={handleTextAreaChange}
           />
 
           {/* Active Toggle */}
-          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                id="isActive"
-                type="checkbox"
-                name="isActive"
-                checked={formData.isActive}
-                onChange={handleChange}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-bg rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-            </label>
-            <label htmlFor="isActive" className="text-black font-medium cursor-pointer">
-              {formData.isActive ? "Active" : "Inactive"}
+          <div className="flex items-center gap-3">
+            <input
+              id="isActive"
+              type="checkbox"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+              className="h-4 w-4"
+            />
+            <label htmlFor="isActive" className="text-black">
+              Active
             </label>
           </div>
 
           <div className="flex justify-end mt-4">
             <button
               type="submit"
-              className="bg-bg text-white py-3 px-8 rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
+              className="bg-bg text-white py-2 px-6 rounded-lg"
               disabled={loading || dataLoading}
             >
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Updating...
-                </span>
-              ) : (
-                "Update Generic"
-              )}
+              {loading ? "Updating..." : "Update Generic"}
             </button>
           </div>
         </form>
