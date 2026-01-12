@@ -55,3 +55,10 @@ export const GetBrandImages = async () => {
   const response = await axiosInstance.get("/brand/getBrandImages");
   return response.data;
 };
+
+export const GetBrandsByManufacturer = async (manufacturerId, page = 1, limit = 30) => {
+  const response = await axiosInstance.get(
+    `/brand/manufacturer/${manufacturerId}?page=${page}&limit=${limit}`
+  );
+  return response.data;
+};

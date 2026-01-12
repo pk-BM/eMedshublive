@@ -253,3 +253,46 @@ export const getBrandImages = async (req, res) => {
     );
   }
 };
+
+export const getBrandsByManufacturer = async (req, res) => {
+  try {
+    const { manufacturerId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 30;
+    const skip = (page - 1) * limit;
+
+    if (!mongoose.isValidObjectId(manufacturerId)) {
+      return sendResponse(res, 400, false, "Invalid Manufacturer ID", null);
+    }
+
+    const brands = await Brand.find({ manufacturer: manufacturerId })
+      .populate("generic", "name therapeuticClass")
+      .populate("manufacturer", "name")
+      .select("productType name strength unitPrice packImage")
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalCount = await Brand.countDocuments({ manufacturer: manufacturerId });
+
+    if (!brands || brands.length === 0) {
+      return sendResponse(res, 404, false, "No brands found for this manufacturer", null);
+    }
+
+    return sendResponse(res, 200, true, "Brands fetched successfully", {
+      brands,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    });
+  } catch (error) {
+    console.error("Error in getBrandsByManufacturer:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};

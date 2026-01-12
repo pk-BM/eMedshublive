@@ -12,6 +12,7 @@ import NewsPage from "./pages/NewsPage/NewsPage";
 import TestPage from "./pages/TestPage/TestPage";
 import Brand from "./pages/Brand/Brand";
 import BrandDetail from "./pages/BrandDetails/BrandDetail";
+import ManufacturerBrands from "./pages/ManufacturerBrands/ManufacturerBrands";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
@@ -57,6 +58,7 @@ const App = () => {
         <Route path="/brands-allophathic" element={<BrandAllopathic />} />
         <Route path="/brands-herbal" element={<Brand />} />
         <Route path="/brands/:id" element={<BrandDetail />} />
+        <Route path="/manufacturers/:manufacturerId/brands" element={<ManufacturerBrands />} />
 
         <Route path="new-product" element={<NewProduct />} />
         <Route path="/bioequivalent-drugs" element={<BioequivalentDrugs />} />

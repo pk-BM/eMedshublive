@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import { getBrandById } from "../../lib/APIs/brandsAPI";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
@@ -72,11 +72,13 @@ const BrandDetail = () => {
     {
       label: "Generic",
       value: brand.generic?.name,
+      id: brand.generic?._id,
       icon: <FaCapsules className="text-teal-600 text-2xl" />,
     },
     {
       label: "Manufacturer",
       value: brand.manufacturer?.name,
+      id: brand.manufacturer?._id,
       icon: <FaIndustry className="text-teal-600 text-2xl" />,
     },
     {
@@ -156,32 +158,50 @@ const BrandDetail = () => {
             item.value && (
               <motion.div
                 key={index}
-                className={`flex items-center gap-4 bg-gray-50 p-5 rounded-xl shadow-sm hover:shadow-md transition duration-300 ${
-                  item.label === "Status" && brand.isActive
-                    ? "border border-green-200 bg-green-50"
-                    : item.label === "Status" && !brand.isActive
+                className={`flex items-center gap-4 bg-gray-50 p-5 rounded-xl shadow-sm hover:shadow-md transition duration-300 ${item.label === "Status" && brand.isActive
+                  ? "border border-green-200 bg-green-50"
+                  : item.label === "Status" && !brand.isActive
                     ? "border border-red-200 bg-red-50"
                     : ""
-                }`}
+                  }`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 * index }}
               >
                 {item.icon}
-                <div>
-                  <p className="font-semibold text-gray-700">{item.label}</p>
-                  <p
-                    className={`text-lg font-medium ${
-                      item.label === "Status"
+                {
+                  item.label === 'Generic' ? <Link to={`/generics/${item?.id}`}>
+                    <p className="font-semibold text-gray-700">{item.label}</p>
+                    <p
+                      className={`text-lg font-medium ${item.label === "Status"
                         ? brand.isActive
                           ? "text-green-700"
                           : "text-red-700"
                         : ""
-                    }`}
-                  >
-                    {item.value}
-                  </p>
-                </div>
+                        }`}
+                    >
+                      {item.value}
+                    </p>
+                  </Link> : item.label === 'Manufacturer' ? <Link to={`/manufacturers/${item?.id}/brands`}>
+                    <p className="font-semibold text-gray-700">{item.label}</p>
+                    <p className="text-lg font-medium hover:text-teal-600 transition-colors">
+                      {item.value}
+                    </p>
+                  </Link> : <div>
+                    <p className="font-semibold text-gray-700">{item.label}</p>
+                    <p
+                      className={`text-lg font-medium ${item.label === "Status"
+                        ? brand.isActive
+                          ? "text-green-700"
+                          : "text-red-700"
+                        : ""
+                        }`}
+                    >
+                      {item.value}
+                    </p>
+                  </div>
+                }
+
               </motion.div>
             )
         )}

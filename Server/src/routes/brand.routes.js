@@ -13,6 +13,7 @@ import {
   getAllopathicBrands,
   getHerbalBrands,
   getBrandImages,
+  getBrandsByManufacturer,
 } from "../controller/brand.controller.js";
 
 const router = express.Router();
@@ -33,6 +34,7 @@ router.get("/getAll", getBrands);
 
 router.get("/getAllopathicBrands", getAllopathicBrands);
 router.get("/getHerbalBrands", getHerbalBrands);
+router.get("/manufacturer/:manufacturerId", getBrandsByManufacturer);
 
 router.get("/:id", getBrandById);
 
