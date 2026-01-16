@@ -4,7 +4,12 @@ export const CreateBrand = async (formData) => {
   const fd = new FormData();
   for (let key in formData) {
     if (formData[key] !== undefined && formData[key] !== null) {
-      fd.append(key, formData[key]);
+      // Handle arrays (like alternateBrands)
+      if (Array.isArray(formData[key])) {
+        fd.append(key, JSON.stringify(formData[key]));
+      } else {
+        fd.append(key, formData[key]);
+      }
     }
   }
 
@@ -18,7 +23,12 @@ export const UpdateBrand = async (id, formData) => {
   const fd = new FormData();
   for (let key in formData) {
     if (formData[key] !== undefined && formData[key] !== null) {
-      fd.append(key, formData[key]);
+      // Handle arrays (like alternateBrands)
+      if (Array.isArray(formData[key])) {
+        fd.append(key, JSON.stringify(formData[key]));
+      } else {
+        fd.append(key, formData[key]);
+      }
     }
   }
 
@@ -53,6 +63,11 @@ export const GetAllHerbalBrands = async () => {
 
 export const GetBrandImages = async () => {
   const response = await axiosInstance.get("/brand/getBrandImages");
+  return response.data;
+};
+
+export const GetBrandOptions = async () => {
+  const response = await axiosInstance.get("/brand/options");
   return response.data;
 };
 

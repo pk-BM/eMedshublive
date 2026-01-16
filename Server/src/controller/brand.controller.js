@@ -6,7 +6,7 @@ import { deleteFromCloudinary } from "../utils/deleteDataFromCloudinary.js";
 
 export const createBrand = async (req, res) => {
   try {
-    const { name, productType, generic, manufacturer } = req.body;
+    const { name, productType, generic, manufacturer, alternateBrands } = req.body;
 
     if (!name || !productType) {
       return sendResponse(
@@ -30,6 +30,17 @@ export const createBrand = async (req, res) => {
       ...req.body,
       createdBy: req.user?._id,
     };
+
+    // Handle alternateBrands array
+    if (alternateBrands) {
+      if (typeof alternateBrands === "string") {
+        try {
+          data.alternateBrands = JSON.parse(alternateBrands);
+        } catch {
+          data.alternateBrands = alternateBrands.split(",").filter(Boolean);
+        }
+      }
+    }
 
     const image = req?.files?.packImage?.[0];
     if (image) {
@@ -133,8 +144,9 @@ export const getBrandById = async (req, res) => {
     }
 
     const brand = await Brand.findById(id)
-      .populate("generic")
-      .populate("manufacturer")
+      .populate("generic", "name therapeuticClass")
+      .populate("manufacturer", "name")
+      .populate("alternateBrands", "name packImage strength unitPrice")
       .populate("createdBy", "name email");
 
     if (!brand) {
@@ -157,6 +169,7 @@ export const getBrandById = async (req, res) => {
 export const updateBrand = async (req, res) => {
   try {
     const { id } = req.params;
+    const { alternateBrands } = req.body;
 
     if (!mongoose.isValidObjectId(id)) {
       return sendResponse(res, 400, false, "Invalid ID", null);
@@ -168,6 +181,17 @@ export const updateBrand = async (req, res) => {
     }
 
     const updatedData = { ...req.body };
+
+    // Handle alternateBrands array
+    if (alternateBrands) {
+      if (typeof alternateBrands === "string") {
+        try {
+          updatedData.alternateBrands = JSON.parse(alternateBrands);
+        } catch {
+          updatedData.alternateBrands = alternateBrands.split(",").filter(Boolean);
+        }
+      }
+    }
 
     const image = req?.files?.packImage?.[0];
     if (image) {
@@ -244,6 +268,25 @@ export const getBrandImages = async (req, res) => {
     return sendResponse(res, 200, true, "sucess", brandsImages);
   } catch (error) {
     console.error("Error in getBrandImages:", error);
+    return sendResponse(
+      res,
+      500,
+      false,
+      error.message || "Internal Server Error",
+      null
+    );
+  }
+};
+
+export const getBrandOptions = async (req, res) => {
+  try {
+    const brands = await Brand.find()
+      .select("_id name")
+      .sort({ name: 1 });
+
+    return sendResponse(res, 200, true, "Brand options fetched successfully", brands);
+  } catch (error) {
+    console.error("Error in getBrandOptions:", error);
     return sendResponse(
       res,
       500,
