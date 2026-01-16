@@ -16,7 +16,7 @@ export const SearchResults = async (req, res) => {
         // Run all 3 searches in parallel
         const [pharmaceuticals, brands, generics] = await Promise.all([
             Pharmaceutical.find({ Name: searchRegex }).select("_id Name").limit(10),
-            Brand.find({ name: searchRegex }).select("_id name").limit(10),
+            Brand.find({ name: searchRegex }).select("_id name strength productType").limit(10),
             Generic.find({ name: searchRegex }).select("_id name").limit(10),
         ]);
 
@@ -31,6 +31,8 @@ export const SearchResults = async (req, res) => {
             ...brands.map(item => ({
                 _id: item._id,
                 name: item.name,
+                strength: item.strength || null,
+                productType: item.productType || null,
                 apiPath: `/brands/${item._id}`,
                 type: "Brand",
             })),

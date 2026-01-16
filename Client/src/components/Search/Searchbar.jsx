@@ -171,14 +171,28 @@ const SearchBar = () => {
                     : "hover:bg-tertiary hover:text-white"
                 }`}
               >
-                <div>
-                  <p
-                    className={`font-semibold ${
-                      selectedIndex === index ? "text-white" : "text-gray-800 group-hover:text-white"
-                    }`}
-                  >
-                    {item.name}
-                  </p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p
+                      className={`font-semibold ${
+                        selectedIndex === index ? "text-white" : "text-gray-800 group-hover:text-white"
+                      }`}
+                    >
+                      {item.name}
+                    </p>
+                    {/* Show strength and productType for Brand items */}
+                    {item.type === "Brand" && (item.strength || item.productType) && (
+                      <span
+                        className={`text-xs ${
+                          selectedIndex === index ? "text-gray-200" : "text-gray-500 group-hover:text-gray-200"
+                        }`}
+                      >
+                        {item.productType && item.strength
+                          ? `${item.productType} • ${item.strength}`
+                          : item.strength || item.productType}
+                      </span>
+                    )}
+                  </div>
                   <p
                     className={`text-sm ${
                       selectedIndex === index ? "text-gray-100" : "text-gray-500 group-hover:text-white"
@@ -188,7 +202,7 @@ const SearchBar = () => {
                   </p>
                 </div>
                 <span
-                  className={`text-xs px-2 py-1 rounded transition-all duration-200 ${
+                  className={`text-xs px-2 py-1 rounded transition-all duration-200 flex-shrink-0 ml-2 ${
                     selectedIndex === index
                       ? "bg-white/20 text-white"
                       : "bg-gray-200 text-gray-600 group-hover:bg-white/20 group-hover:text-white"
